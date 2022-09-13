@@ -127,9 +127,10 @@ service:
 ##
 domain: "https://vaultwarden.example.com"
 
-## @param dataFolder
+## @param dataFolder Prefix to override the location where data is saved. 
+## Note: Please read the [documentation]() for more details about the "DATA_FOLDER" option
 ##
-dataFolder: ""
+dataFolder: "/data"
 
 ## @param externalDatabase.type [string] Type of the databas (protocol)
 ## If set to "-" it will disable generation of external databas link.
