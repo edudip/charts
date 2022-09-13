@@ -12,7 +12,7 @@ image:
   repository: vaultwarden/server
   pullPolicy: IfNotPresent
   tag: "1.25.2"
-  digist: "" //todo::look up how to!
+  digist: "" #//todo::"look up how to"!
 
 ## @param securityContext
 ##
@@ -32,12 +32,12 @@ securityContext: {}
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ##
 resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+##  limits:
+##    cpu: 100m
+##    memory: 128Mi
+##  requests:
+##    cpu: 100m
+##    memory: 128Mi
 
 ## [Kubernetes autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) 
 ## @param autoscaling.enabled Enable horizontal POD autoscaling
@@ -117,6 +117,69 @@ service:
   ##  clientIP:
   ##    timeoutSeconds: 300
   ##
+
+## @section "Vaultwarden related configuration parameters"
+##
+
+## @param domain [string] URL to access Vaultwarden instance
+## Note: Can contain subdir like "https:example.com/vaultwarden" and/or also be without default port like "https://vaultwarden.example.com:30443"
+## Note: Avoid URL-rewriting tricks whenever possible!
+##
+domain: "https://vaultwarden.example.com"
+
+## @param dataFolder
+##
+dataFolder: ""
+
+## @param externalDatabase.type [string] Type of the databas (protocol)
+## If set to "-" it will disable generation of external databas link.
+## Can be "postgresql", "mysql" or "-"
+## @param externalDatabase.username [string] Username of the database user
+## @param externalDatabase.password [string] Password of the database
+## @param externalDatabase.urn [string] URN of the database server (can be IP or domain)
+## @param externalDatabase.port [string] Port of the database server
+## @param externalDatabase.name [string] Name of the database
+## Note: How to use the PostgreSQL Backend can be found [here](https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend)  
+##
+externalDatabase:
+  type: "-"
+  username: "vaultwarden"
+  password: ""
+  urn: ""
+  port: ""
+  name: ""
+  existingSecretName: ""
+
+## @param smtp.urn [string] URN of the SMTP server (can be IP or domain)
+## @param smtp.security [string] Security option of the SMTP server (can be "starttls", "force_tls", "off")
+## Note: The option "force_tls" is the former "SMTP_EXPLICIT_TLS=true" and "starttls" equals "SMTP_SSL=true"
+## @param smtp.port [string] Port of the SMTP server
+## @param smtp.authMechanism [string] 
+## @param smtp.from [string] 
+## @param smtp.fromName [string] 
+## @param smtp.debug [string] 
+## @param smtp.acceptInvalidHostnames
+## @param smtp.acceptInvalidCerts
+## Note: for detailed information about the SMTP options of Vaultwarden please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/SMTP-Configuration#smtp-servers)
+##
+smtp:
+  urn: "smtp.example.com"
+  security: "starttls"
+  port: "587"
+  authMechanism:
+  from: "vaultwarden@smtp."
+  fromName:
+  debug:
+  acceptInvalidHostnames: false
+  acceptInvalidCerts: false
+
+## @param websocket.
+websocket:
+  enabled: true
+  address: ""
+  port: ""
+
+
 
 ## @skip podAnnotations
 ##

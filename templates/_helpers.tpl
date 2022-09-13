@@ -60,3 +60,23 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+Generate the database port from value file
+*/}}
+{{ define "dbPort" }}
+{{- if .Values.externalDatabase.port }}
+{{- printf "%s%s" ":" .Values.externalDatabase.port }}
+{{- else }}
+{{- printf "%s" "" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Generate the database URL from value file
+*/}}
+{{ define "dbUrl" }}
+{{- $var := print .Values.externalDatabase.type "://" .Values.externalDatabase.username ":" .Values.externalDatabase.password "@" .Values.externalDatabase.urn (include "dbPort" . ) "/" .Values.externalDatabase.name }}
+{{- printf "%s" $var }}
+{{- end -}}
