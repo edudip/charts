@@ -1,20 +1,22 @@
 ---
 ## @section "Common parameters"
+##
+
+## Docker parameters to controle the image
+## @param image.repository [string] Repository url or name
+## @param image.pullpolicy [string] [pullPilicy](ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images): can 'IfNotPresent' or 'Always'
+## @param image.tag [string] Overrides the image tag whose default is the chart appVersion
+## @param image.digist [string] Sha256 value of the image. Note: if set, it will override the tag parameter
 ## 
 image:
-  ## @param image.repository
-  ##
   repository: vaultwarden/server
-  ## @param image.pullpolicy 
-  ##
   pullPolicy: IfNotPresent
-  ## @param image.tag [string] Overrides the image tag whose default is the chart appVersion.
-  ##
   tag: "1.25.2"
-  ## @param image.digist
-  ##
-  digist: "" //todo::
+  digist: "" //todo::look up how to!
+
 ## @param securityContext
+##
+securityContext: {}
 ##  capabilities:
 ##    drop:
 ##    - ALL
@@ -22,7 +24,21 @@ image:
 ##  runAsNonRoot: true
 ##  runAsUser: 1000
 ##
-securityContext: {}
+
+## @param resources [map] Defaults for the resources used by the application
+## We usually recommend not to specify default resources and to leave this as a conscious
+## choice for the user. This also increases chances charts run on environments with little
+## resources, such as Minikube. If you do want to specify resources, uncomment the following
+## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+##
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
 ## [Kubernetes autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) 
 ## @param autoscaling.enabled Enable horizontal POD autoscaling
 ## @param autoscaling.minReplicas Minimum number of replicas
@@ -35,44 +51,56 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  ## targetMemoryUtilizationPercentage: 80
 
-## @skip podAnnotations
-##
-podAnnotations: {}
-## @skip podSecurityContext
-## fsGroup: 2000
-##
-podSecurityContext: {}
-## @skip imagePullSecrets
-##
-imagePullSecrets: []
-## @skip nameOverride
-##
-nameOverride: ""
-## @skip fullnameOverride
-##
-fullnameOverride: ""
-## @skip replicaCount
+## @param replicaCount Number of replicas to deploy
 ##
 replicaCount: 1
-## @skip nodeSelector
+
+## @param serviceAccount.create Specifies whether a service account should be created
+## @param serviceAccount.annotations [object] Annotations to add to the service account
+## @param serviceAccount.name [string] The name of the service account to use
+## Note: If `serviceAccount.name` not set and `serviceAccount.create` is 'true', a name is generated using the fullname template
 ##
-nodeSelector: {}
-## @skip tolerations
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+## @section "Traffic related parameters"
+## @param ingress.enabled turn on/off ingress of the chart at all
+## @param ingress.className [string] Name of the Ingress Class
+## @param ingress.annotations [object] Annotations to add to the ingress object
+## @param ingress.hosts [array] Array of host objects
+## @param ingress.tls [array] Array of TLS configurations
 ##
-tolerations: []
-## @skip affinity
-##
-affinity: {}
-## @section "Service realted parameter"
-##
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  ##  kubernetes.io/ingress.class: nginx
+  ##  kubernetes.io/tls-acme: "true"
+  ##
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  ##  - secretName: chart-example-tls
+  ##    hosts:
+  ##      - chart-example.local
+  ##
+
 service:
   ## @param service.type [string] Kubernetes service type
+  ## @param service.ports [array] List of service ports
+  ## @param service.clusterIP [string] Service cluster IP
+  ## @param service.externalTrafficPolicy [array] Service external traffic policy
+  ## @param service.sessionAffinity [string] Service session afffinity
+  ## @param service.sessionAffinityConfig [object] Additional settings for the sessionAffinity
   ##
   type: ClusterIP
-  ## @param service.ports [array] List of service ports
-  ##
   port:
     - name: websocket
       protocol: TCP
@@ -82,74 +110,44 @@ service:
       protocol: TCP
       targetPort: 8080
       port: 80
-  ## @param service.clusterIP Service cluster IP
-  ## For example: "None"
-  ##
   clusterIP: ""
-  ## @param service.sessionAffinity Service session afffinity
-  ##
-  sessionAffinity: None
-  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
-  ## sessionAffinityConfig:
-  ##   clientIP:
-  ##     timeoutSeconds: 180
-  ## 
-  sessionAffinityConfig: {}
-  ## @param service.externalTrafficPolicy [array] Service external traffic policy 
-  ##
   externalTrafficPolicy: []
-
-## @section "serviceAccount related parameter"
-##
-serviceAccount:
-  ## @param serviceAccount.create 
-  ## Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-## @section "Ingress related parameters"
-##
-##
-ingress:
-  ## @param ingress.enabled turn on/off ingress of the chart at all
+  sessionAffinity: None 
+  sessionAffinityConfig: {}
+  ##  clientIP:
+  ##    timeoutSeconds: 300
   ##
-  enabled: false
-  ## @param ingress.className 
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
 
 ## @skip podAnnotations
 ##
 podAnnotations: {}
+
 ## @skip podSecurityContext
-## fsGroup: 2000
 ##
 podSecurityContext: {}
+## fsGroup: 2000
+##
 
+## @skip imagePullSecrets
+##
+imagePullSecrets: []
+
+## @skip nameOverride
+##
+nameOverride: ""
+
+## @skip fullnameOverride
+##
+fullnameOverride: ""
+
+## @skip nodeSelector
+##
+nodeSelector: {}
+
+## @skip tolerations
+##
+tolerations: []
+
+## @skip affinity
+##
+affinity: {}
