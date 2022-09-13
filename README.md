@@ -14,19 +14,3 @@ helm install foo/vaultwarden
 - Helm xxx
 
 ## Usage
-
-## Configuration
-
-### Service
-|Name                 |Description                       |Default    |
-|---------------------|----------------------------------|-----------|
-|`service.annotations`| Set annotations for the service. | {}        |
-|`service.type`       | Kubernetes service type          |"ClusterIP"|
-|``|                |        |
-|        |                |        |
-|        |                |        |
-|        |                |        |
-|        |                |        |
-|        |                |        |
-|        |                |        |
-
