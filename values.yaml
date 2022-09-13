@@ -6,13 +6,14 @@
 ## @param image.repository [string] Repository url or name
 ## @param image.pullpolicy [string] [pullPilicy](ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images): can 'IfNotPresent' or 'Always'
 ## @param image.tag [string] Overrides the image tag whose default is the chart appVersion
-## @param image.digist [string] Sha256 value of the image. Note: if set, it will override the tag parameter
+## @param image.hash [string] Sha256 value of the image. Note: if set "hash" will override the tag parameter
+## Note: To read more about the used Vaultwarden server image please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Which-container-image-to-use)
 ## 
 image:
   repository: vaultwarden/server
   pullPolicy: IfNotPresent
   tag: "1.25.2"
-  digist: "" #//todo::"look up how to"!
+  hash: "" #//todo::"look up how to"!
 
 ## @param securityContext
 ##
@@ -67,7 +68,43 @@ serviceAccount:
   annotations: {}
   name: ""
 
+## @skip podAnnotations
+##
+podAnnotations: {}
+
+## @skip podSecurityContext
+##
+podSecurityContext: {}
+## fsGroup: 2000
+##
+
+## @skip imagePullSecrets
+##
+imagePullSecrets: []
+
+## @skip nameOverride
+##
+nameOverride: ""
+
+## @skip fullnameOverride
+##
+fullnameOverride: ""
+
+## @skip nodeSelector
+##
+nodeSelector: {}
+
+## @skip tolerations
+##
+tolerations: []
+
+## @skip affinity
+##
+affinity: {}
+
 ## @section "Traffic related parameters"
+##
+
 ## @param ingress.enabled turn on/off ingress of the chart at all
 ## @param ingress.className [string] Name of the Ingress Class
 ## @param ingress.annotations [object] Annotations to add to the ingress object
@@ -124,6 +161,7 @@ service:
 ## @param domain [string] URL to access Vaultwarden instance
 ## Note: Can contain subdir like "https:example.com/vaultwarden" and/or also be without default port like "https://vaultwarden.example.com:30443"
 ## Note: Avoid URL-rewriting tricks whenever possible!
+## Note: To enable [U2F and FIDO2 WebAuthn](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-U2F-%28and-FIDO2-WebAuthn%29-authentication) authentication, you must be serving vaultwarden from an HTTPS domain with a valid certificate
 ##
 domain: "https://vaultwarden.example.com"
 
@@ -134,12 +172,13 @@ dataFolder: "/data"
 
 ## @param externalDatabase.type [string] Type of the databas (protocol)
 ## If set to "-" it will disable generation of external databas link.
-## Can be "postgresql", "mysql" or "-"
+## Can be "postgresql", "mysql", "sqlite" or "-"
 ## @param externalDatabase.username [string] Username of the database user
 ## @param externalDatabase.password [string] Password of the database
 ## @param externalDatabase.urn [string] URN of the database server (can be IP or domain)
 ## @param externalDatabase.port [string] Port of the database server
 ## @param externalDatabase.name [string] Name of the database
+## @param externalDatabase.overrideUri [string] If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters
 ## Note: How to use the PostgreSQL Backend can be found [here](https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend)  
 ##
 externalDatabase:
@@ -150,68 +189,94 @@ externalDatabase:
   port: ""
   name: ""
   existingSecretName: ""
+## overridUri: ""
 
 ## @param smtp.urn [string] URN of the SMTP server (can be IP or domain)
 ## @param smtp.security [string] Security option of the SMTP server (can be "starttls", "force_tls", "off")
 ## Note: The option "force_tls" is the former "SMTP_EXPLICIT_TLS=true" and "starttls" equals "SMTP_SSL=true"
+## Note: The option "starttls" will only support TLSv1.1 and TLSv1.2 (port defaults on '587')
+## Note: The option "off" will provide no encryption at all and should not be used (port defaults on '25')
 ## @param smtp.port [string] Port of the SMTP server
-## @param smtp.authMechanism [string] 
-## @param smtp.from [string] 
-## @param smtp.fromName [string] 
-## @param smtp.debug [string] 
-## @param smtp.acceptInvalidHostnames
-## @param smtp.acceptInvalidCerts
+## @param smtp.username [string] Username of SMTP server (leave empty if not needed)
+## @param smtp.password [string] Password of SMTP server (leave empty if not needed)
+## @param smtp.from [string] Email address of the sender (should not be empty or invalid)
 ## Note: for detailed information about the SMTP options of Vaultwarden please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/SMTP-Configuration#smtp-servers)
 ##
 smtp:
   urn: "smtp.example.com"
   security: "starttls"
   port: "587"
-  authMechanism:
-  from: "vaultwarden@smtp."
-  fromName:
-  debug:
-  acceptInvalidHostnames: false
-  acceptInvalidCerts: false
+  username: ""
+  password: ""
+  from: "vaultwarden@smtp.example.com"
 
-## @param websocket.
-websocket:
-  enabled: true
-  address: ""
-  port: ""
-
-
-
-## @skip podAnnotations
+## @param signups.allowed [string] If true anyone can access the instance of Vaultwarden
+## Note: Even if set to 'false' an existing user who is an organization owner or admin can still invite new users
+## Note: To disable whole invitation process modify `invitationsAllowed` instead
+## @param signups.domainWhitelist [string] Restrics registration to this email addresses from certain domains
+## Note: Can be single domain or comma separatet list of domains like: "example.com,test.intern,foo.bar"
+## Note: If set the option `signups.allowed` is ignored
 ##
-podAnnotations: {}
+signups:
+  allowed: true
+## domainWhitelist: ""
 
-## @skip podSecurityContext
+## @param invitationsAllowed [string] If set to false no invitation is possible
+## Note: This disables the invitation for even existing organization owner and admin
+## Note: Use `signups.allowed` instead if you want existing organization owner and admin to be able to invite users
 ##
-podSecurityContext: {}
-## fsGroup: 2000
-##
+invitationsAllowed: true
 
-## @skip imagePullSecrets
-##
-imagePullSecrets: []
+## @param websocket.enabled [string] WebSocket notifications are used to inform the browser and desktop Bitwarden clients
+## Note: Further information can be found in the [wiki](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-WebSocket-notifications) of Vaultwarden
+websocketEnabled: true
 
-## @skip nameOverride
+## @param webVaultEnabled [string] This parameter disables this static file hosting completely if set to 'false'
+## Note: read more about this feature in the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Disabling-or-overriding-the-Vault-interface-hosting)
 ##
-nameOverride: ""
+webVaultEnabled: true
 
-## @skip fullnameOverride
+## @param showPasswordHint [string] Usually, password hints are sent by email.
+## Note: If set to true, hints are also available from the password hint page, without valid eMail configuration
 ##
-fullnameOverride: ""
+showPasswordHint: false
 
-## @skip nodeSelector
+## @param adminToken [string] The `/admin` page will be enabled if set any token
+## Warning: It's heavily recommended to activate HTTPS before enabling this feature, to avoid possible MITM attacks.
+## Note: This can be any toke, for example running ```openssl rand -base64 48```
+## Note: Forther information can be found on the Vaultwarden [wiki](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-admin-page)
 ##
-nodeSelector: {}
+adminToken: ""
 
-## @skip tolerations
+## @param disableAdminToken [string] If set to true built in `ADMIN_TOKEN` will be disabled
+## Warning: Your administration page will be accessible to anyone with acces to the URL
+## Note: Can be used, if another method is in use to authenticate to the `/admin` page
 ##
-tolerations: []
+disableAdminToken: false
 
-## @skip affinity
+## @param yubikey.clientID [string] Your Yubikey client ID
+## @param yubikey.secretKey [string] Your Yubikey secret key
+## @param yubikey.server [string] If not set points to YubiCloud servers
+## Note: Please read the [documenation](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-Yubikey-OTP-authentication) about this topic
 ##
-affinity: {}
+## yubikey:
+##   clientID: ""
+##   secretKey: ""
+##   server: ""
+
+## @param rocket.tls [string] To enable HTTPS in Vaultwarden itself, set the ROCKET_TLS environment variable
+## Note: This option is not recommended!
+## Note: Valid format for rocketTLS looks like this: `{certs=\"/path/to/certs.pem\",key=\"/path/to/key.pem\"}`
+## Note: Read more about the Rocket [itself](https://rocket.rs/) or the usage by [Vaultwarden](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-HTTPS#via-rocket)
+## @param rocket.limits [string] By default the API calls are limited to 10MB
+## Note: Read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Changing-the-API-request-size-limit) about the limits for detailed information
+## @param rocket.workers [string] Set the number of rocket workers by hand
+## Note: If not set it spawns two times the number of CPU cores amount of worker
+## Note: Read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Changing-the-number-of-workers) for detailed inforamtion
+##
+## rocket:
+##   tls: ""
+##   limits: ""
+##   workers: ""
+
+## @param 

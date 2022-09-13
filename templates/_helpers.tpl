@@ -76,7 +76,7 @@ Generate the database port from value file
 {{/*
 Generate the database URL from value file
 */}}
-{{ define "dbUrl" }}
+{{ define "dbUri" }}
 {{- $var := print .Values.externalDatabase.type "://" .Values.externalDatabase.username ":" .Values.externalDatabase.password "@" .Values.externalDatabase.urn (include "dbPort" . ) "/" .Values.externalDatabase.name }}
 {{- printf "%s" $var }}
 {{- end -}}

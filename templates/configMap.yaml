@@ -3,38 +3,51 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "vaultwarden.fullname" . }}
-  namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/component: vaultwarden
+    {{- include "vaultwarden.labels" . | nindent 4 }}
 data:
-  DOMAIN: {{ .Values.domain | quote }}
+  {{- if .Values.adminToken }}
+  ADMIN_TOKEN: {{ .Values.adminToken | quote }}
+  {{- end }}
+  DATA_FOLDER: {{ .Values.storage.dataFolder | quote }}
   {{- if ne "default" .Values.database.type }}
-  {{- if .Values.database.uriOverride }}
-  DATABASE_URL: {{ .Values.database.uriOverride }}
+  {{- if .Values.database.overrideUri }}
+  DATABASE_URL: {{ .Values.database.overrideUri }}
   {{- else }}
-  DATABASE_URL: {{ include "dbString" . | quote }}
+  DATABASE_URL: {{ include "dbUri" . | quote }}
   {{- end }}
   {{- end }}
-  {{- if and .Values.smtp.urn .Values.smtp.from | quote }}
+  DISABLE_ADMIN_TOKEN: {{ .Values.disableAdminToken | quote }}
+  DOMAIN: {{ .Values.domain | quote }}
+  INVITATIONS_ALLOWED: {{ .Values.invitationsAllowed | quote }}
+  {{- if .Values.rocket.limits }}
+  ROCKET_LIMITS: {{ .Values.rocket.limits | quote }}
+  {{- end }}
+  {{- if .Values.rocket.tls }}
+  ROCKET_TLS: {{ .Values.rocket.tls | quote }}
+  {{- end }}
+  {{- if .Values.rocket.workers }}
+  ROCKET_WORKERS: {{ .Values.rocket.workers | quote }}
+  {{- end }}
+  SIGNUPS_ALLOWED: {{ .Values.signups.allowed | quote }}
+  {{- if .Values.signups.domainWhitelist }}
+  SIGNUPS_DOMAINS_WHITELIST: {{ .Values.signups.domainWhitelist | quote }}
+  {{- end }}
+  SHOW_PASSWORD_HINT: {{ .Values.showPasswordHint | quote }}
+  {{- if and .Values.smtp.urn .Values.smtp.from }}
   SMTP_HOST: {{ .Values.smtp.urn | quote }}
   SMTP_SECURITY: {{ .Values.smtp.security | quote }}
   SMTP_PORT: {{ .Values.smtp.port | quote }}
-  SMTP_AUTH_MECHANISM: {{ .Values.smtp.authMechanism | quote }}
+  SMTP_USERNAME: {{ .Values.smtp.username | quote }}
+  SMTP_PASSWORD: {{ .Values.smtp.password | quote }}
   SMTP_FROM: {{ .Values.smtp.from | quote }}
-  SMTP_FROM_NAME: {{ default "Vaultwarden" .Values.smtp.fromName | quote }}
-  SMTP_DEBUG: {{ .Values.smtp.debug | quote }}
-  SMTP_ACCEPT_INVALID_HOSTNAMES: {{ .Values.smtp.acceptInvalidHostnames | quote }}
-  SMTP_ACCEPT_INVALID_CERTS: {{ .Values.smtp.acceptInvalidCerts | quote }}
   {{- end }}
-  {{- if .Values.websocket.enabled }}
-  WEBSOCKET_ENABLED: "true"
-  WEBSOCKET_ADDRESS: {{ .Values.websocket.address | quote }}
-  WEBSOCKET_PORT: {{ .Values.websocket.port | quote }}
+  WEB_VAULT_ENABLED: {{ default "true" .Values.webVaultEnabled | quote }}
+  WEBSOCKET_ENABLED: {{ .Values.websocketEnabled | quote }}
+  {{- if and .Values.yubikey.clientID .Values.yubikey.secretKey }}
+  YUBICO_CLIENT_ID: {{ .Values.yubikey.clientID | quote }}
+  YUBICO_SECRET_KEY: {{ .Values.yubikey.secretKey | quote }}
+  {{- if .Values.yubikey.server }}
+  YUBICO_SERVER: {{ .Values.yubikey.server | quote }}
   {{- end }}
-  DATA_FOLDER: {{ .Values.storage.dataDir | quote }}
-  ROCKET_PORT: {{ .Values.rocket.port | quote }}
-  ROCKET_WORKERS: {{ .Values.rocket.workers | quote }}
-  SHOW_PASSWORD_HINT: {{ .Values.showPassHint | quote }}
-  SIGNUPS_DOMAINS_WHITELIST: {{ .Values.signupDomains | quote }}
-  SIGNUPS_VERIFY: {{ .Values.signupsVerify | quote }}
-  WEB_VAULT_ENABLED: {{ .Values.webVaultEnabled | quote }}
+  {{- end }}
