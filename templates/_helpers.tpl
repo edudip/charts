@@ -54,12 +54,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "vaultwarden.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "vaultwarden.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
+{{- if .Values.serviceAccount.create -}}
+    {{ default (include "vaultwarden.fullname" .) .Values.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
 
 
 {{/*
@@ -76,7 +76,20 @@ Generate the database port from value file
 {{/*
 Generate the database URL from value file
 */}}
-{{ define "dbUri" }}
+{{- define "dbUrl" -}}
 {{- $var := print .Values.externalDatabase.type "://" .Values.externalDatabase.username ":" .Values.externalDatabase.password "@" .Values.externalDatabase.urn (include "dbPort" . ) "/" .Values.externalDatabase.name }}
 {{- printf "%s" $var }}
+{{- end -}}
+
+{{/*
+Generate proper image repository name
+*/}}
+{{- define "vaultwarden.image" -}}
+{{- if not (empty .Values.image.digest) }}
+{{- $url := print .Values.image.repository "@" .Values.image.digest }}
+{{- printf "%s" $url }}
+{{- else }}
+{{- $url := print .Values.image.repository ":" .Values.image.tag }}
+{{- printf "%s" $url }}
+{{- end }}
 {{- end -}}

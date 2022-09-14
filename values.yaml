@@ -3,21 +3,33 @@
 ##
 
 ## Docker parameters to controle the image
-## @param image.repository [string] Repository url or name
+## @param image.repository [string] Repository URI or name
 ## @param image.pullpolicy [string] [pullPilicy](ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images): can 'IfNotPresent' or 'Always'
 ## @param image.tag [string] Overrides the image tag whose default is the chart appVersion
-## @param image.hash [string] Sha256 value of the image. Note: if set "hash" will override the tag parameter
+## @param image.digest [string] Sha256 value of the image. Note: if set "hash" will override the tag parameter
 ## Note: To read more about the used Vaultwarden server image please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Which-container-image-to-use)
 ## 
 image:
   repository: vaultwarden/server
   pullPolicy: IfNotPresent
   tag: "1.25.2"
-  hash: "" #//todo::"look up how to"!
+  digest: "sha256:b53ade4460c14f7b5c94a22c2520b2a1414c770290a5aadc707973a27617ca26"
 
-## @param securityContext
+## @param podSecurityContext.enabled Switches `securityContext` for the POD
 ##
-securityContext: {}
+podSecurityContext:
+  enabled: false
+##  capabilities:
+##    drop:
+##    - ALL
+##  readOnlyRootFilesystem: true
+##  runAsNonRoot: true
+##  runAsUser: 1000
+##
+
+## @param containerSecurityContext,enabled Switch `securityContext` for the container
+containerSecurityContext:
+  enabled: false
 ##  capabilities:
 ##    drop:
 ##    - ALL
@@ -77,7 +89,7 @@ serviceAccount:
 ## @param persistence.storageClassName [string]
 ## @param persistence.volumeName [string] If `persistence.storageClassName` is set to "-" 
 ##
-persitence:
+persistence:
   enabled: true
   existingClaim: ""
   accessMode: []
@@ -87,12 +99,6 @@ persitence:
 ## @skip podAnnotations
 ##
 podAnnotations: {}
-
-## @skip podSecurityContext
-##
-podSecurityContext: {}
-## fsGroup: 2000
-##
 
 ## @skip imagePullSecrets
 ##
@@ -154,7 +160,7 @@ service:
   ## @param service.sessionAffinityConfig [object] Additional settings for the sessionAffinity
   ##
   type: ClusterIP
-  port:
+  ports:
     - name: websocket
       protocol: TCP
       targetPort: 3012
@@ -196,12 +202,12 @@ dataFolder: "/data"
 ## @param externalDatabase.urn [string] URN of the database server (can be IP or domain)
 ## @param externalDatabase.port [string] Port of the database server
 ## @param externalDatabase.name [string] Name of the database
-## @param externalDatabase.overrideUri [string] If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters
-## @param externalDatabase.existingSecret.name [string] Name of the secret containing complete database URI
+## @param externalDatabase.overrideUrl [string] If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters
+## @param externalDatabase.existingSecret.name [string] Name of the secret containing complete database URL
 ## Note: If set `externalDatabase.username` and `externalDatabase.password` will be ignored
-## @param externalDatabase.existingSecret.uriKey [string] Key of the databas URI (if let empfty "uri" will be used) 
-## Note: For PSQL a full PSQL Databas URI is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
-## Note: For MariaDB a full MySQL Databas URI is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
+## @param externalDatabase.existingSecret.urlKey [string] Key of the databas URL (if let empfty "url" will be used) 
+## Note: For PSQL a full PSQL Databas URL is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
+## Note: For MariaDB a full MySQL Databas URL is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
 ## Note: How to use the PostgreSQL Backend can be found [here](https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend)  
 ## Note: How to use the MariaDB Backend can be found [here](https://github.com/dani-garcia/vaultwarden/wiki/Migrating-from-MariaDB-%28MySQL%29-to-SQLite)
 ##
@@ -212,10 +218,10 @@ externalDatabase:
   urn: ""
   port: ""
   name: ""
-## overridUri: ""
-##  existingSecret:
-##    name: ""
-##    uriKey: ""
+  overridUrl: ""
+  existingSecret:
+    name: ""
+    urlKey: ""
 
 
 ## @param smtp.urn [string] URN of the SMTP server (can be IP or domain)
@@ -240,10 +246,10 @@ smtp:
   username: ""
   password: ""
   from: "vaultwarden@smtp.example.com"
-  ## existingSecret:
-  ##   name: ""
-  ##   usernameKey: "username"
-  ##   passwordKey: "password"
+  existingSecret:
+    name: ""
+    usernameKey: ""
+    passwordKey: ""
 
 
 ## @param signups.allowed [string] If true anyone can access the instance of Vaultwarden
@@ -289,9 +295,9 @@ adminToken: ""
 ## Note: Read notes about `adminToken` for more inforamtion about this parameter
 ## Note: If set value of `adminToken` will be ignored
 ##
-## adminTokenSecret:
-##   name: ""
-##   tokenKey: ""
+adminTokenSecret:
+  name: ""
+  tokenKey: ""
 
 ## @param disableAdminToken [string] If set to true built in `ADMIN_TOKEN` will be disabled
 ## Warning: Your administration page will be accessible to anyone with acces to the URL
@@ -304,10 +310,10 @@ disableAdminToken: false
 ## @param yubikey.server [string] If not set points to YubiCloud servers
 ## Note: Please read the [documenation](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-Yubikey-OTP-authentication) about this topic
 ##
-## yubikey:
-##   clientID: ""
-##   secretKey: ""
-##   server: ""
+yubikey:
+  clientID: ""
+  secretKey: ""
+  server: ""
 
 ## @param rocket.tls [string] To enable HTTPS in Vaultwarden itself, set the ROCKET_TLS environment variable
 ## Note: This option is not recommended!
@@ -319,7 +325,7 @@ disableAdminToken: false
 ## Note: If not set it spawns two times the number of CPU cores amount of worker
 ## Note: Read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Changing-the-number-of-workers) for detailed inforamtion
 ##
-## rocket:
-##   tls: ""
-##   limits: ""
-##   workers: ""
+rocket:
+   tls: ""
+   limits: ""
+   workers: ""

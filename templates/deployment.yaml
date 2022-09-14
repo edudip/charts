@@ -2,17 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "vaultwarden.fullname" . }}
+  name: {{ include "vaultwarden.fullname" . | quote }}
   labels:
     {{- include "vaultwarden.labels" . | nindent 4 }}
 spec:
-  {{- if ne "-" .Values.externalDatabase.type }}
   {{- if not .Values.autoscaling.enabled }}
+  {{- if ne "-" .Values.externalDatabase.type }}
   replicas: {{ .Values.replicaCount }}
+  {{- else }}
+  replicas: 1
+  {{- end }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "vaultwarden.selectorLabels" . | nindent 6 }}
+      {{- include "vaultwarden.selectorLabels" . | nindent 6 }} 
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -26,22 +29,23 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "vaultwarden.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ include "vaultwarden.serviceAccountName" . | quote }}
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if and .Values.persitence.enabled (eq "-" .Values.externalDatabase.type) }}
+        - name: vaultwarden
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          image: {{ include "vaultwarden.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- if and .Values.persistence.enabled (eq "-" .Values.externalDatabase.type) }}
           volumeMounts:
             - name: data
               mountPath: {{ .Values.dataFolder | quote }}
           {{- end }}
-          ports:
-            {{- toYaml .Values.service.port | indent 12 }}
+          ports: {{ ( dict "value" .Values.service.ports "context" $ ) | toYaml | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
@@ -56,7 +60,7 @@ spec:
             - configMapRef:
                 name: {{ include "vaultwarden.fullname" . }}-env
           env:
-            {{- if .Values.smtp.existingSecret.Name }}
+            {{- if not (empty .Values.smtp.existingSecret.name) }}
             - name: SMTP_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -65,25 +69,22 @@ spec:
             - name: SMTP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.smtp.existingSecret.Name | quote }}
+                  name: {{ .Values.smtp.existingSecret.name | quote }}
                   key: {{ default "password" .Values.smtp.existingSecret.passwordKey | quote }}
             {{- end }}
-            {{- if .Values.adminTokenSecret.name }}
+            {{- if not (empty .Values.adminTokenSecret.name) }}
             - name: ADMIN_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.adminTokenSecret.name | quote }}
                   key: {{ default "token" .Values.adminTokenSecret.tokenKey | quote }}
             {{- end }}
-            {{- if .Values.externalDatabase.existingSecret.name }}
+            {{- if not (empty .Values.externalDatabase.existingSecret.name) }}
             - name: 
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.externalDatabase.existingSecret.name | quote }}
-                  key: {{ default "uri" .Values.externalDatabase.existingSecret.uriKey | quote }}
-            {{- end }}
-            {{- if .Values.serviceAccount.create }}
-            serviceAccountName: {{ .Values.serviceAccount.name }}
+                  key: {{ default "url" .Values.externalDatabase.existingSecret.urlKey | quote }}
             {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -101,5 +102,9 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+            {{- if not (empty .Values.persistence.existingClaim) }}
+            claimName: {{ .Values.persistence.existingClaim | quote }}
+            {{- else }}
             claimName: {{ include "vaultwarden.fullname" . }}-pvc
+            {{- end }}
       {{- end }}

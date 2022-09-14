@@ -8,11 +8,11 @@ metadata:
     {{- include "vaultwarden.labels" . | nindent 4 }}
   annotations:
     {{- if .Values.service.annotations }}
-    {{- include .Values.service.annotations | toYaml | indent 4 }}
+    {{- toYaml .Values.service.annotations | indent 4 }}
     {{- end }}
 spec:
   type: {{ .Values.service.type }}
-  ports: {{- include .Values.service.ports | toYaml | indent 4 }}
+  ports: {{ ( dict "value" .Values.service.ports "context" $ ) | toYaml | nindent 4 }}
   {{- if .Values.service.clusterIP }}
   clusterIP: {{ .Values.service.clusterIP }}
   {{- end }}
