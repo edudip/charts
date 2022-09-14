@@ -34,9 +34,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
+            {{- toYaml .Values.service.port ] indent 12 }}
           livenessProbe:
             httpGet:
               path: /
@@ -47,6 +45,36 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "vaultwarden.fullname" . }}-env
+          env:
+            {{- if .Values.smtp.existingSecret.Name }}
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret.name | quote }}
+                  key: {{ default "username" .Values.smtp.existingSecret.usernameKey | quote }}
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret.Name | quote }}
+                  key: {{ default "password" .Values.smtp.existingSecret.passwordKey | quote }}
+            {{- end }}
+            {{- if .Values.adminTokenSecret.name }}
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.adminTokenSecret.name | quote }}
+                  key: {{ default "token" .Values.adminTokenSecret.tokenKey | quote }}
+            {{- end }}
+            {{- if .Values.externalDatabase.existingSecret.name }}
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalDatabase.existingSecret.name | quote }}
+                  key: {{ default "uri" .Values.externalDatabase.existingSecret.uriKey | quote }}
+            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

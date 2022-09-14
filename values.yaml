@@ -159,6 +159,7 @@ service:
 ##
 
 ## @param domain [string] URL to access Vaultwarden instance
+## Warning: A valid URL is required to start Vaultwarden
 ## Note: Can contain subdir like "https:example.com/vaultwarden" and/or also be without default port like "https://vaultwarden.example.com:30443"
 ## Note: Avoid URL-rewriting tricks whenever possible!
 ## Note: To enable [U2F and FIDO2 WebAuthn](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-U2F-%28and-FIDO2-WebAuthn%29-authentication) authentication, you must be serving vaultwarden from an HTTPS domain with a valid certificate
@@ -179,7 +180,13 @@ dataFolder: "/data"
 ## @param externalDatabase.port [string] Port of the database server
 ## @param externalDatabase.name [string] Name of the database
 ## @param externalDatabase.overrideUri [string] If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters
+## @param externalDatabase.existingSecret.name [string] Name of the secret containing complete database URI
+## Note: If set `externalDatabase.username` and `externalDatabase.password` will be ignored
+## @param externalDatabase.existingSecret.uriKey [string] Key of the databas URI (if let empfty "uri" will be used) 
+## Note: For PSQL a full PSQL Databas URI is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
+## Note: For MariaDB a full MySQL Databas URI is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
 ## Note: How to use the PostgreSQL Backend can be found [here](https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend)  
+## Note: How to use the MariaDB Backend can be found [here](https://github.com/dani-garcia/vaultwarden/wiki/Migrating-from-MariaDB-%28MySQL%29-to-SQLite)
 ##
 externalDatabase:
   type: "-"
@@ -188,10 +195,14 @@ externalDatabase:
   urn: ""
   port: ""
   name: ""
-  existingSecretName: ""
 ## overridUri: ""
+##  existingSecret:
+##    name: ""
+##    uriKey: ""
+
 
 ## @param smtp.urn [string] URN of the SMTP server (can be IP or domain)
+## Note: for detailed information about the SMTP options of Vaultwarden please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/SMTP-Configuration#smtp-servers)
 ## @param smtp.security [string] Security option of the SMTP server (can be "starttls", "force_tls", "off")
 ## Note: The option "force_tls" is the former "SMTP_EXPLICIT_TLS=true" and "starttls" equals "SMTP_SSL=true"
 ## Note: The option "starttls" will only support TLSv1.1 and TLSv1.2 (port defaults on '587')
@@ -200,7 +211,10 @@ externalDatabase:
 ## @param smtp.username [string] Username of SMTP server (leave empty if not needed)
 ## @param smtp.password [string] Password of SMTP server (leave empty if not needed)
 ## @param smtp.from [string] Email address of the sender (should not be empty or invalid)
-## Note: for detailed information about the SMTP options of Vaultwarden please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/SMTP-Configuration#smtp-servers)
+## @param smtp.existingSecret.name [string] 
+## Note: If set `smtp.username` and `smtp.password` will be ignored
+## @param smtp.existingSecret.usernameKey [string] Key of the SMTP username (if let empty "username" will be used)
+## @param smtp.existingSecret.passwordKey [string] Key of the SMTP password (if let empty "password" will be used)
 ##
 smtp:
   urn: "smtp.example.com"
@@ -209,6 +223,11 @@ smtp:
   username: ""
   password: ""
   from: "vaultwarden@smtp.example.com"
+  ## existingSecret:
+  ##   name: ""
+  ##   usernameKey: "username"
+  ##   passwordKey: "password"
+
 
 ## @param signups.allowed [string] If true anyone can access the instance of Vaultwarden
 ## Note: Even if set to 'false' an existing user who is an organization owner or admin can still invite new users
@@ -248,6 +267,15 @@ showPasswordHint: false
 ##
 adminToken: ""
 
+## @param adminTokenSecret.name [string] Name of the secret containing the `ADMIN_TOKEN`
+## @param amdinTokenSecret.tokenKey [string] Key of the token (if let empty "token" will be used)
+## Note: Read notes about `adminToken` for more inforamtion about this parameter
+## Note: If set value of `adminToken` will be ignored
+##
+## adminTokenSecret:
+##   name: ""
+##   tokenKey: ""
+
 ## @param disableAdminToken [string] If set to true built in `ADMIN_TOKEN` will be disabled
 ## Warning: Your administration page will be accessible to anyone with acces to the URL
 ## Note: Can be used, if another method is in use to authenticate to the `/admin` page
@@ -278,5 +306,3 @@ disableAdminToken: false
 ##   tls: ""
 ##   limits: ""
 ##   workers: ""
-
-## @param 

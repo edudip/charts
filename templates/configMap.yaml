@@ -2,23 +2,27 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "vaultwarden.fullname" . }}
+  name: {{ include "vaultwarden.fullname" . }}-env
   labels:
     {{- include "vaultwarden.labels" . | nindent 4 }}
 data:
   {{- if .Values.adminToken }}
+  {{- if not .Values.adminTokenSecret }}
   ADMIN_TOKEN: {{ .Values.adminToken | quote }}
   {{- end }}
-  DATA_FOLDER: {{ .Values.storage.dataFolder | quote }}
-  {{- if ne "default" .Values.database.type }}
-  {{- if .Values.database.overrideUri }}
+  {{- end }}
+  DATA_FOLDER: {{ default "/data" .Values.dataFolder | quote }}
+  {{- if ne "-" .Values.extermalDatabase.type }}
+  {{- if .Values.externalDatabase.existingSecret.name }}
+  {{- if .Values.externalDatabase.overrideUri }}
   DATABASE_URL: {{ .Values.database.overrideUri }}
   {{- else }}
   DATABASE_URL: {{ include "dbUri" . | quote }}
   {{- end }}
   {{- end }}
+  {{- end }}
   DISABLE_ADMIN_TOKEN: {{ .Values.disableAdminToken | quote }}
-  DOMAIN: {{ .Values.domain | quote }}
+  DOMAIN: {{ required "A valid URL is required!" .Values.domain | quote }}
   INVITATIONS_ALLOWED: {{ .Values.invitationsAllowed | quote }}
   {{- if .Values.rocket.limits }}
   ROCKET_LIMITS: {{ .Values.rocket.limits | quote }}
@@ -38,8 +42,10 @@ data:
   SMTP_HOST: {{ .Values.smtp.urn | quote }}
   SMTP_SECURITY: {{ .Values.smtp.security | quote }}
   SMTP_PORT: {{ .Values.smtp.port | quote }}
+  {{- if not .Values.smtp.existingSecret }}
   SMTP_USERNAME: {{ .Values.smtp.username | quote }}
   SMTP_PASSWORD: {{ .Values.smtp.password | quote }}
+  {{- end }}
   SMTP_FROM: {{ .Values.smtp.from | quote }}
   {{- end }}
   WEB_VAULT_ENABLED: {{ default "true" .Values.webVaultEnabled | quote }}
