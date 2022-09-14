@@ -101,5 +101,5 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-          claimName: {{ include "vaultwarden.fullname" . }}-pvc
+            claimName: {{ include "vaultwarden.fullname" . }}-pvc
       {{- end }}

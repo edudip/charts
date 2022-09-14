@@ -73,13 +73,16 @@ serviceAccount:
 ## @param persistence.existingClaim [string] Name of an existing claim
 ## Note: This will ignore all the other options of `persistence` and uses the `existingClaim` instead
 ## @param persistence.accessMode [array] Array of accessModes
+## @param persistence.size [string]
+## @param persistence.storageClassName [string]
+## @param persistence.volumeName [string] If `persistence.storageClassName` is set to "-" 
 ##
 persitence:
   enabled: true
   existingClaim: ""
   accessMode: []
   size: "4Gi"
-  storageClass: "-"
+  storageClassName: ""
 
 ## @skip podAnnotations
 ##
