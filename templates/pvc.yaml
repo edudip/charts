@@ -1,0 +1,19 @@
+---
+{{- if and .Values.persitence.enabled (not .Values.persistance.existingClaim ) (eq "-" .Values.externalDatabase.type )}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "vaultwarden.fullname" . }}-pvc
+  labels: 
+    {{- include "vaultwarden.labels" . | nindent 4 }}
+spec:
+  {{- if not (empty .Values.persistence.accessModes) }}
+  accessModes:
+  {{- range .Values.persistence.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- end }}
+  resource:
+    requests:
+      storage: {{ .Values.persitence.size | quote }}
+{{- end }}

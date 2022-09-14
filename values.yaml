@@ -55,6 +55,7 @@ autoscaling:
   ## targetMemoryUtilizationPercentage: 80
 
 ## @param replicaCount Number of replicas to deploy
+## Note: This value will be ignored unless `externalDatabase.type` is not equal to "-"
 ##
 replicaCount: 1
 
@@ -67,6 +68,18 @@ serviceAccount:
   create: true
   annotations: {}
   name: ""
+
+## @param persistence.enabled [string] Switches the persistance feature
+## @param persistence.existingClaim [string] Name of an existing claim
+## Note: This will ignore all the other options of `persistence` and uses the `existingClaim` instead
+## @param persistence.accessMode [array] Array of accessModes
+##
+persitence:
+  enabled: true
+  existingClaim: ""
+  accessMode: []
+  size: "4Gi"
+  storageClass: "-"
 
 ## @skip podAnnotations
 ##
@@ -167,13 +180,14 @@ service:
 domain: "https://vaultwarden.example.com"
 
 ## @param dataFolder Prefix to override the location where data is saved. 
-## Note: Please read the [documentation]() for more details about the "DATA_FOLDER" option
+## Note: Please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Changing-persistent-data-location) for more details about the "DATA_FOLDER" option
 ##
 dataFolder: "/data"
 
 ## @param externalDatabase.type [string] Type of the databas (protocol)
-## If set to "-" it will disable generation of external databas link.
-## Can be "postgresql", "mysql", "sqlite" or "-"
+## Warning: If set to "-" internal SQLlite3 is used what will require a `persitentVolume` and causes data loss without
+## Note: Can be "postgresql", "mysql" or "-"
+## Note: If set to "-" it will disable generation of external databas link
 ## @param externalDatabase.username [string] Username of the database user
 ## @param externalDatabase.password [string] Password of the database
 ## @param externalDatabase.urn [string] URN of the database server (can be IP or domain)

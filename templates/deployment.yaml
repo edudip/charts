@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,6 +6,7 @@ metadata:
   labels:
     {{- include "vaultwarden.labels" . | nindent 4 }}
 spec:
+  {{- if ne "-" .Values.externalDatabase.type }}
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
@@ -33,8 +35,13 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if and .Values.persitence.enabled (eq "-" .Values.externalDatabase.type) }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.dataFolder | quote }}
+          {{- end }}
           ports:
-            {{- toYaml .Values.service.port ] indent 12 }}
+            {{- toYaml .Values.service.port | indent 12 }}
           livenessProbe:
             httpGet:
               path: /
@@ -69,11 +76,14 @@ spec:
                   key: {{ default "token" .Values.adminTokenSecret.tokenKey | quote }}
             {{- end }}
             {{- if .Values.externalDatabase.existingSecret.name }}
-            - name: ADMIN_TOKEN
+            - name: 
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.externalDatabase.existingSecret.name | quote }}
                   key: {{ default "uri" .Values.externalDatabase.existingSecret.uriKey | quote }}
+            {{- end }}
+            {{- if .Values.serviceAccount.create }}
+            serviceAccountName: {{ .Values.serviceAccount.name }}
             {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -86,4 +96,10 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if and .Values.persistence.enabled (eq "-" .Values.externalDatabase.type) }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+          claimName: {{ include "vaultwarden.fullname" . }}-pvc
       {{- end }}
