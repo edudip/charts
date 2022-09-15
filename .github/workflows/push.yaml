@@ -11,6 +11,6 @@ jobs:
       - name: checkout
         uses: actions/checkout@main
       - run: |
-          ls -la {{ github.workspace }}
+          ls -la
           echo "wow!"
       - run: echo "🐕 💕"
