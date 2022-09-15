@@ -4,10 +4,12 @@
 
 ## Docker parameters to controle the image
 ## @param image.repository [string] Repository URI or name
-## @param image.pullpolicy [string] [pullPilicy](ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images): can 'IfNotPresent' or 'Always'
+## @param image.pullPolicy [string] Kubernetes pullPolicy: can 'IfNotPresent' or 'Always'
+## Ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
 ## @param image.tag [string] Overrides the image tag whose default is the chart appVersion
 ## @param image.digest [string] Sha256 value of the image. Note: if set "hash" will override the tag parameter
-## Note: To read more about the used Vaultwarden server image please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Which-container-image-to-use)
+## Note: To read more about the used Vaultwarden server image please read the documentation
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Which-container-image-to-use
 ## 
 image:
   repository: vaultwarden/server
@@ -27,7 +29,8 @@ podSecurityContext:
 ##  runAsUser: 1000
 ##
 
-## @param containerSecurityContext,enabled Switch `securityContext` for the container
+## @param containerSecurityContext.enabled Switch `securityContext` for the container
+##
 containerSecurityContext:
   enabled: false
 ##  capabilities:
@@ -38,7 +41,7 @@ containerSecurityContext:
 ##  runAsUser: 1000
 ##
 
-## @param resources [map] Defaults for the resources used by the application
+## @param resources [object] Defaults for the resources used by the application
 ## We usually recommend not to specify default resources and to leave this as a conscious
 ## choice for the user. This also increases chances charts run on environments with little
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -52,19 +55,20 @@ resources: {}
 ##    cpu: 100m
 ##    memory: 128Mi
 
-## [Kubernetes autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) 
+## Kubernetes autoscaling
+## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ 
 ## @param autoscaling.enabled Enable horizontal POD autoscaling
 ## @param autoscaling.minReplicas Minimum number of replicas
 ## @param autoscaling.maxReplicas Maximum number of replicas
-## @param autoscaling.targetCPU Target CPU utilization percentage
-## @param autoscaling.targetMemory Target Memory utilization percentage
+## @param autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
+## @param autoscaling.targetMemoryUtilizationPercentage [nullable] Target Memory utilization percentage
 ##
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  ## targetMemoryUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: ""
 
 ## @param replicaCount Number of replicas to deploy
 ## Note: This value will be ignored unless `externalDatabase.type` is not equal to "-"
@@ -84,7 +88,7 @@ serviceAccount:
 ## @param persistence.enabled [string] Switches the persistance feature
 ## @param persistence.existingClaim [string] Name of an existing claim
 ## Note: This will ignore all the other options of `persistence` and uses the `existingClaim` instead
-## @param persistence.accessMode [array] Array of accessModes
+## @param persistence.accessModes [array] Array of accessModes
 ## @param persistence.size [string]
 ## @param persistence.storageClassName [string]
 ## @param persistence.volumeName [string] If `persistence.storageClassName` is set to "-" 
@@ -185,12 +189,13 @@ service:
 ## Warning: A valid URL is required to start Vaultwarden
 ## Note: Can contain subdir like "https:example.com/vaultwarden" and/or also be without default port like "https://vaultwarden.example.com:30443"
 ## Note: Avoid URL-rewriting tricks whenever possible!
-## Note: To enable [U2F and FIDO2 WebAuthn](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-U2F-%28and-FIDO2-WebAuthn%29-authentication) authentication, you must be serving vaultwarden from an HTTPS domain with a valid certificate
+## Note: To enable U2F and FIDO2 WebAuthn authentication, you must be serving vaultwarden from an HTTPS domain with a valid certificate
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Enabling-U2F-%28and-FIDO2-WebAuthn%29-authentication
 ##
 domain: "https://vaultwarden.example.com"
 
 ## @param dataFolder Prefix to override the location where data is saved. 
-## Note: Please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Changing-persistent-data-location) for more details about the "DATA_FOLDER" option
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Changing-persistent-data-location
 ##
 dataFolder: "/data"
 
@@ -208,9 +213,9 @@ dataFolder: "/data"
 ## Note: If set `externalDatabase.username` and `externalDatabase.password` will be ignored
 ## @param externalDatabase.existingSecret.urlKey [string] Key of the databas URL (if let empfty "url" will be used) 
 ## Note: For PSQL a full PSQL Databas URL is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
+## Note: Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend
 ## Note: For MariaDB a full MySQL Databas URL is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
-## Note: How to use the PostgreSQL Backend can be found [here](https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend)  
-## Note: How to use the MariaDB Backend can be found [here](https://github.com/dani-garcia/vaultwarden/wiki/Migrating-from-MariaDB-%28MySQL%29-to-SQLite)
+## Note: Ref: https://github.com/dani-garcia/vaultwarden/wiki/Migrating-from-MariaDB-%28MySQL%29-to-SQLite
 ##
 externalDatabase:
   type: "-"
@@ -219,14 +224,14 @@ externalDatabase:
   urn: ""
   port: ""
   name: ""
-  overridUrl: ""
+  overrideUrl: ""
   existingSecret:
     name: ""
     urlKey: ""
 
 
 ## @param smtp.urn [string] URN of the SMTP server (can be IP or domain)
-## Note: for detailed information about the SMTP options of Vaultwarden please read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/SMTP-Configuration#smtp-servers)
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/SMTP-Configuration#smtp-servers
 ## @param smtp.security [string] Security option of the SMTP server (can be "starttls", "force_tls", "off")
 ## Note: The option "force_tls" is the former "SMTP_EXPLICIT_TLS=true" and "starttls" equals "SMTP_SSL=true"
 ## Note: The option "starttls" will only support TLSv1.1 and TLSv1.2 (port defaults on '587')
@@ -270,12 +275,12 @@ signups:
 ##
 invitationsAllowed: true
 
-## @param websocket.enabled [string] WebSocket notifications are used to inform the browser and desktop Bitwarden clients
-## Note: Further information can be found in the [wiki](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-WebSocket-notifications) of Vaultwarden
+## @param websocketEnabled [string] WebSocket notifications are used to inform the browser and desktop Bitwarden clients
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Enabling-WebSocket-notifications
 websocketEnabled: true
 
 ## @param webVaultEnabled [string] This parameter disables this static file hosting completely if set to 'false'
-## Note: read more about this feature in the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Disabling-or-overriding-the-Vault-interface-hosting)
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Disabling-or-overriding-the-Vault-interface-hosting
 ##
 webVaultEnabled: true
 
@@ -287,12 +292,12 @@ showPasswordHint: false
 ## @param adminToken [string] The `/admin` page will be enabled if set any token
 ## Warning: It's heavily recommended to activate HTTPS before enabling this feature, to avoid possible MITM attacks.
 ## Note: This can be any toke, for example running ```openssl rand -base64 48```
-## Note: Forther information can be found on the Vaultwarden [wiki](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-admin-page)
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Enabling-admin-page
 ##
 adminToken: ""
 
 ## @param adminTokenSecret.name [string] Name of the secret containing the `ADMIN_TOKEN`
-## @param amdinTokenSecret.tokenKey [string] Key of the token (if let empty "token" will be used)
+## @param adminTokenSecret.tokenKey [string] Key of the token (if let empty "token" will be used)
 ## Note: Read notes about `adminToken` for more inforamtion about this parameter
 ## Note: If set value of `adminToken` will be ignored
 ##
@@ -309,7 +314,7 @@ disableAdminToken: false
 ## @param yubikey.clientID [string] Your Yubikey client ID
 ## @param yubikey.secretKey [string] Your Yubikey secret key
 ## @param yubikey.server [string] If not set points to YubiCloud servers
-## Note: Please read the [documenation](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-Yubikey-OTP-authentication) about this topic
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Enabling-Yubikey-OTP-authentication
 ##
 yubikey:
   clientID: ""
@@ -319,20 +324,21 @@ yubikey:
 ## @param rocket.tls [string] To enable HTTPS in Vaultwarden itself, set the ROCKET_TLS environment variable
 ## Note: This option is not recommended!
 ## Note: Valid format for rocketTLS looks like this: `{certs=\"/path/to/certs.pem\",key=\"/path/to/key.pem\"}`
-## Note: Read more about the Rocket [itself](https://rocket.rs/) or the usage by [Vaultwarden](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-HTTPS#via-rocket)
+## Ref: https://rocket.rs/
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Enabling-HTTPS#via-rocket
 ## @param rocket.limits [string] By default the API calls are limited to 10MB
-## Note: Read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Changing-the-API-request-size-limit) about the limits for detailed information
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Changing-the-API-request-size-limit
 ## @param rocket.workers [string] Set the number of rocket workers by hand
 ## Note: If not set it spawns two times the number of CPU cores amount of worker
-## Note: Read the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Changing-the-number-of-workers) for detailed inforamtion
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Changing-the-number-of-workers
 ##
 rocket:
    tls: ""
    limits: ""
    workers: ""
 
-## @param writeAheadLoggingEnabled [string] Switches Write-Agead Logging of SQLite database
+## @param writeAheadLoggingEnabled [string] Switches Write-Ahead Logging of SQLite database
 ## Warning: Do not change this, unless you're absolutely sure that you need to turn WAL off
-## Note: More iformation can be found in the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Running-without-WAL-enabled)
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Running-without-WAL-enabled
 ##
 writeAheadLoggingEnabled: true

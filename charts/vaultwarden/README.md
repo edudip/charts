@@ -13,4 +13,11 @@ helm install foo/vaultwarden
 - Kubernetes 1.20+
 - Helm xxx
 
-## Usage
+## Parameters
+
+### "Common parameters"
+
+### "Traffic related parameters"
+
+### "Vaultwarden related configuration parameters"
+
