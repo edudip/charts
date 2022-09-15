@@ -329,3 +329,9 @@ rocket:
    tls: ""
    limits: ""
    workers: ""
+
+## @param writeAheadLoggingEnabled [string] Switches Write-Agead Logging of SQLite database
+## Warning: Do not change this, unless you're absolutely sure that you need to turn WAL off
+## Note: More iformation can be found in the [documentation](https://github.com/dani-garcia/vaultwarden/wiki/Running-without-WAL-enabled)
+##
+writeAheadLoggingEnabled: true

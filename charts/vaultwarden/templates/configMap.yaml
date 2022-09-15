@@ -23,6 +23,7 @@ data:
   {{- end }}
   DISABLE_ADMIN_TOKEN: {{ .Values.disableAdminToken | quote }}
   DOMAIN: {{ required "A valid URL is required!" .Values.domain | quote }}
+  ENABLE_DB_WAL: {{ default "true" .Values.writeAheadLoggingEnabled | quote }}
   INVITATIONS_ALLOWED: {{ .Values.invitationsAllowed | quote }}
   {{- if not (empty .Values.rocket.limits) }}
   ROCKET_LIMITS: {{ .Values.rocket.limits | quote }}
