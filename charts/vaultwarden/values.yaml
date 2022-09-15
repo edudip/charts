@@ -163,11 +163,11 @@ service:
   ports:
     - name: websocket
       protocol: TCP
-      targetPort: 3012
+      targetPort: websocket
       port: 3012
     - name: http
       protocol: TCP
-      targetPort: 8080
+      targetPort: http
       port: 80
   clusterIP: ""
   externalTrafficPolicy: []

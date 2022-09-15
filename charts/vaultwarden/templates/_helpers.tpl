@@ -21,14 +21,14 @@ If release name contains chart name it will be used as a full name.
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
-{{- end }}
+{{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "vaultwarden.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- end -}}
 
 {{/*
 Common labels
@@ -40,7 +40,7 @@ helm.sh/chart: {{ include "vaultwarden.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
+{{- end -}}
 
 {{/*
 Selector labels
@@ -48,7 +48,7 @@ Selector labels
 {{- define "vaultwarden.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "vaultwarden.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
+{{- end -}}
 
 {{/*
 Create the name of the service account to use
@@ -65,13 +65,13 @@ Create the name of the service account to use
 {{/*
 Generate the database port from value file
 */}}
-{{ define "dbPort" }}
+{{- define "dbPort" -}}
 {{- if .Values.externalDatabase.port }}
 {{- printf "%s%s" ":" .Values.externalDatabase.port }}
 {{- else }}
 {{- printf "%s" "" }}
 {{- end }}
-{{- end }}
+{{- end -}}
 
 {{/*
 Generate the database URL from value file

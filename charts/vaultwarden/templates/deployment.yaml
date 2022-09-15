@@ -45,7 +45,15 @@ spec:
             - name: data
               mountPath: {{ .Values.dataFolder | quote }}
           {{- end }}
-          ports: {{ ( dict "value" .Values.service.ports "context" $ ) | toYaml | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            {{- if .Values.websocketEnabled }}
+            - name: websocket
+              containerPort: 3012
+              protocol: TCP
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /
