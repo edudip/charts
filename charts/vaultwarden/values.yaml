@@ -92,7 +92,8 @@ serviceAccount:
 persistence:
   enabled: true
   existingClaim: ""
-  accessMode: []
+  accessModes:
+    - ReadWriteOnce
   size: "4Gi"
   storageClassName: ""
 

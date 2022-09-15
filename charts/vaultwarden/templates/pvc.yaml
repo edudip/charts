@@ -7,16 +7,16 @@ metadata:
   labels: 
     {{- include "vaultwarden.labels" . | nindent 4 }}
 spec:
-  {{- if not (empty .Values.persistence.accessMode) }}
+  {{- if not (empty .Values.persistence.accessModes) }}
   accessModes:
   {{- range .Values.persistence.accessModes }}
     - {{ . | quote }}
   {{- end }}
   {{- end }}
-  resource:
+  resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
-  {{- if .Values.persistence.storageClassName }}
+  {{- if not (empty .Values.persistence.storageClassName) }}
   storageclassName: {{ .Values.persistence.storageClassName | quote }}
   {{- end }}
 {{- end -}}
