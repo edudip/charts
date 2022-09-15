@@ -15,9 +15,5 @@ helm install foo/vaultwarden
 
 ## Parameters
 
-### "Common parameters"
-
-### "Traffic related parameters"
-
-### "Vaultwarden related configuration parameters"
-
+## Further Inforamtion
+...

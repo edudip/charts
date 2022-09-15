@@ -1,5 +1,5 @@
 ---
-## @section "Common parameters"
+## @section "Common Parameters"
 ##
 
 ## Docker parameters to controle the image
@@ -182,7 +182,7 @@ service:
   ##    timeoutSeconds: 300
   ##
 
-## @section "Vaultwarden related configuration parameters"
+## @section "Vaultwarden Related Parameters"
 ##
 
 ## @param domain [string] URL to access Vaultwarden instance
