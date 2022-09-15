@@ -1,12 +1,18 @@
 ---
 name: "generate README file"
 on:
-  pull_request:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - labeled
+      - synchronize
     branches:
       - main
 jobs:
   run-npm-script:
     name: "run-npm-script"
+    if: ${{ github.event.pull_request.state != 'closed' }}
     runs-on: self-hosted
     steps:
       - run: echo "Checkout branch"
