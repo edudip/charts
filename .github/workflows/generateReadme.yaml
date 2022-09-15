@@ -1,0 +1,17 @@
+---
+name: "generate README file"
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  run-npm-script:
+    name: "run-npm-script"
+    runs-on: self-hosted
+    steps:
+      - run: echo "Checkout branch"
+      - name: "checkout branch at main"
+        uses: actions/checkout@main
+      - run: git clone https://github.com/bitnami-labs/readme-generator-for-helm
+      - run: npm install ./readme-generator-for-helm
+      - run: npm run-script       
