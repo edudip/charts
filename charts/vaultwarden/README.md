@@ -17,30 +17,30 @@ $ helm install some-vaultwarden edudip/vaultwarden
 
 ### "Common Parameters"
 
-| Name                                            | Description                                                                    | Value   |
-| ----------------------------------------------- | ------------------------------------------------------------------------------ | ------- |
-| `image.repository`                              | Repository URI or name                                                         | `""`    |
-| `image.pullPolicy`                              | Kubernetes pullPolicy: can 'IfNotPresent' or 'Always'                          | `""`    |
-| `image.tag`                                     | Overrides the image tag whose default is the chart appVersion                  | `""`    |
-| `image.digest`                                  | Sha256 value of the image. Note: if set "hash" will override the tag parameter | `""`    |
-| `podSecurityContext.enabled`                    | Switches `securityContext` for the POD                                         | `false` |
-| `containerSecurityContext.enabled`              | Switch `securityContext` for the container                                     | `false` |
-| `resources`                                     | Defaults for the resources used by the application                             | `{}`    |
-| `autoscaling.enabled`                           | Enable horizontal POD autoscaling                                              | `false` |
-| `autoscaling.minReplicas`                       | Minimum number of replicas                                                     | `1`     |
-| `autoscaling.maxReplicas`                       | Maximum number of replicas                                                     | `100`   |
-| `autoscaling.targetCPUUtilizationPercentage`    | Target CPU utilization percentage                                              | `80`    |
-| `autoscaling.targetMemoryUtilizationPercentage` | Target Memory utilization percentage                                           | `""`    |
-| `replicaCount`                                  | Number of replicas to deploy                                                   | `1`     |
-| `serviceAccount.create`                         | Specifies whether a service account should be created                          | `true`  |
-| `serviceAccount.annotations`                    | Annotations to add to the service account                                      | `{}`    |
-| `serviceAccount.name`                           | The name of the service account to use                                         | `""`    |
-| `persistence.enabled`                           | Switches the persistance feature                                               | `""`    |
-| `persistence.existingClaim`                     | Name of an existing claim                                                      | `""`    |
-| `persistence.accessModes`                       | Array of accessModes                                                           | `[]`    |
-| `persistence.size`                              |                                                                                | `""`    |
-| `persistence.storageClassName`                  |                                                                                | `""`    |
-| `persistence.volumeName`                        | If `persistence.storageClassName` is set to "-"                                | `""`    |
+| Name                                            | Description                                                                      | Value   |
+| ----------------------------------------------- | -------------------------------------------------------------------------------- | ------- |
+| `image.repository`                              | Repository URI or name                                                           | `""`    |
+| `image.pullPolicy`                              | Kubernetes pullPolicy: can 'IfNotPresent' or 'Always'                            | `""`    |
+| `image.tag`                                     | Overrides the image tag whose default is the chart appVersion                    | `""`    |
+| `image.digest`                                  | Sha256 value of the image. Note: if set `digest` will override the tag parameter | `""`    |
+| `podSecurityContext.enabled`                    | Switches `securityContext` for the POD                                           | `false` |
+| `containerSecurityContext.enabled`              | Switch `securityContext` for the container                                       | `false` |
+| `resources`                                     | Defaults for the resources used by the application                               | `{}`    |
+| `autoscaling.enabled`                           | Enable horizontal POD autoscaling                                                | `false` |
+| `autoscaling.minReplicas`                       | Minimum number of replicas                                                       | `1`     |
+| `autoscaling.maxReplicas`                       | Maximum number of replicas                                                       | `100`   |
+| `autoscaling.targetCPUUtilizationPercentage`    | Target CPU utilization percentage                                                | `80`    |
+| `autoscaling.targetMemoryUtilizationPercentage` | Target Memory utilization percentage                                             | `""`    |
+| `replicaCount`                                  | Number of replicas to deploy                                                     | `1`     |
+| `serviceAccount.create`                         | Specifies whether a service account should be created                            | `true`  |
+| `serviceAccount.annotations`                    | Annotations to add to the service account                                        | `{}`    |
+| `serviceAccount.name`                           | The name of the service account to use                                           | `""`    |
+| `persistence.enabled`                           | Switches the persistance feature                                                 | `""`    |
+| `persistence.existingClaim`                     | Name of an existing claim                                                        | `""`    |
+| `persistence.accessModes`                       | Array of accessModes                                                             | `[]`    |
+| `persistence.size`                              |                                                                                  | `""`    |
+| `persistence.storageClassName`                  |                                                                                  | `""`    |
+| `persistence.volumeName`                        | If `persistence.storageClassName` is set to "-"                                  | `""`    |
 
 
 ### "Traffic related parameters"
@@ -71,7 +71,7 @@ $ helm install some-vaultwarden edudip/vaultwarden
 | `externalDatabase.password`              | Password of the database                                                                         | `""`    |
 | `externalDatabase.urn`                   | URN of the database server (can be IP or domain)                                                 | `""`    |
 | `externalDatabase.port`                  | Port of the database server                                                                      | `""`    |
-| `externalDatabase.name`                  | Name of the database                                                                             | `""`    |
+| `externalDatabase.database`              | Name of the database                                                                             | `""`    |
 | `externalDatabase.overrideUrl`           | If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters | `""`    |
 | `externalDatabase.existingSecret.name`   | Name of the secret containing complete database URL                                              | `""`    |
 | `externalDatabase.existingSecret.urlKey` | Key of the databas URL (if let empfty "url" will be used)                                        | `""`    |
@@ -101,4 +101,5 @@ $ helm install some-vaultwarden edudip/vaultwarden
 | `rocket.limits`                          | By default the API calls are limited to 10MB                                                     | `""`    |
 | `rocket.workers`                         | Set the number of rocket workers by hand                                                         | `""`    |
 | `writeAheadLoggingEnabled`               | Switches Write-Ahead Logging of SQLite database                                                  | `""`    |
+
 
