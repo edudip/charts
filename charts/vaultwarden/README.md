@@ -69,7 +69,7 @@ $ helm install some-vaultwarden edudip/vaultwarden
 | `externalDatabase.type`                  | Type of the databas (protocol)                                                                   | `""`    |
 | `externalDatabase.username`              | Username of the database user                                                                    | `""`    |
 | `externalDatabase.password`              | Password of the database                                                                         | `""`    |
-| `externalDatabase.urn`                   | URN of the database server (can be IP or domain)                                                 | `""`    |
+| `externalDatabase.host`                  | URN of the database server (can be IP or domain)                                                 | `""`    |
 | `externalDatabase.port`                  | Port of the database server                                                                      | `""`    |
 | `externalDatabase.database`              | Name of the database                                                                             | `""`    |
 | `externalDatabase.overrideUrl`           | If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters | `""`    |
