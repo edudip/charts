@@ -3,6 +3,17 @@ entries:
   vaultwarden:
   - apiVersion: v2
     appVersion: 1.25.2
+    created: "2022-09-16T19:14:19.498097649Z"
+    description: A simple and lightweight Vaultwarden chart
+    digest: 79d1fd6484a38ae97d55312f07f855cc93e4bcc5fe5727bcb309dc1936ca695e
+    icon: https://github.com/dani-garcia/vaultwarden/blob/main/src/static/images/vaultwarden-icon.png?raw=true
+    name: vaultwarden
+    type: application
+    urls:
+    - https://github.com/edudip/charts/releases/download/vaultwarden-0.2.1/vaultwarden-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 1.25.2
     created: "2022-09-16T18:47:03.429385704Z"
     description: A simple and lightweight Vaultwarden chart
     digest: 4e513b07f672aa4e623bbcfdf17c3bd64aca333089cbec203cedc0fe1d64daf7
@@ -34,4 +45,4 @@ entries:
     urls:
     - https://github.com/edudip/charts/releases/download/vaultwarden-0.0.8/vaultwarden-0.0.8.tgz
     version: 0.0.8
-generated: "2022-09-16T18:47:03.429437204Z"
+generated: "2022-09-16T19:14:19.498120749Z"
