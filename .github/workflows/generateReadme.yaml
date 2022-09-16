@@ -10,7 +10,7 @@ on:
 jobs:
   gen-readme-and-push-results:
     name: "Generate README and push results"
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - run: echo "Checkout branch"
       - name: "Checkout project code"
