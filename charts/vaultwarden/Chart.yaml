@@ -1,8 +1,0 @@
-apiVersion: v2
-name: vaultwarden
-description: A simple and lightweight Vaultwarden chart
-type: application
-icon: https://github.com/dani-garcia/vaultwarden/blob/main/src/static/images/vaultwarden-icon.png?raw=true
-
-version: 0.0.6
-appVersion: "1.25.2"
