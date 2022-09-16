@@ -12,6 +12,8 @@ jobs:
       - run: echo "Checkout branch"
       - name: "Checkout project code"
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
       - name: "Install Node"
         uses: actions/setup-node@v3
         with:
