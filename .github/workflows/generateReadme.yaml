@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'charts/*/values.yaml'
+
 jobs:
   gen-readme-and-push-results:
     name: "Generate README and push results"
