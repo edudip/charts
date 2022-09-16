@@ -213,9 +213,9 @@ dataFolder: "/data"
 ## Note: If set `externalDatabase.username` and `externalDatabase.password` will be ignored
 ## @param externalDatabase.existingSecret.urlKey [string] Key of the databas URL (if let empfty "url" will be used) 
 ## Note: For PSQL a full PSQL Databas URL is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
-## Note: Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend
 ## Note: For MariaDB a full MySQL Databas URL is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
-## Note: Ref: https://github.com/dani-garcia/vaultwarden/wiki/Migrating-from-MariaDB-%28MySQL%29-to-SQLite
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-MariaDB-%28MySQL%29-Backend
 ##
 externalDatabase:
   type: "-"

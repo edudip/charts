@@ -88,7 +88,7 @@ spec:
                   key: {{ default "token" .Values.adminTokenSecret.tokenKey | quote }}
             {{- end }}
             {{- if not (empty .Values.externalDatabase.existingSecret.name) }}
-            - name: 
+            - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.externalDatabase.existingSecret.name | quote }}
