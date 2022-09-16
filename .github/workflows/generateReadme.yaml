@@ -25,4 +25,5 @@ jobs:
             git config user.name "github-actions"
             git config user.email "github-actions@github.com"
             git add README.md && git commit -s -m "docs: generate README.md file with 'readme-generator-for-helm'"
+            git push
           fi
