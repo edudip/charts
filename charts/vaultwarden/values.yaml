@@ -205,7 +205,7 @@ dataFolder: "/data"
 ## Note: If set to "-" it will disable generation of external databas link
 ## @param externalDatabase.username [string] Username of the database user
 ## @param externalDatabase.password [string] Password of the database
-## @param externalDatabase.urn [string] URN of the database server (can be IP or domain)
+## @param externalDatabase.host [string] URN of the database server (can be IP or domain)
 ## @param externalDatabase.port [string] Port of the database server
 ## @param externalDatabase.database [string] Name of the database
 ## @param externalDatabase.overrideUrl [string] If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters
@@ -221,7 +221,7 @@ externalDatabase:
   type: "-"
   username: "vaultwarden"
   password: ""
-  urn: ""
+  host: ""
   port: ""
   database: ""
   overrideUrl: ""
