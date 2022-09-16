@@ -1,27 +1,38 @@
 ---
 name: "generate README file"
 on:
-  pull_request_target:
-    types:
-      - opened
-      - reopened
-      - labeled
-      - synchronize
+  pull_request:
     branches:
       - main
 jobs:
-  run-npm-script:
-    name: "run-npm-script"
-    if: ${{ github.event.pull_request.state != 'closed' }}
+  gen-readme-and-push-results:
+    name: "Generate README and push results"
     runs-on: self-hosted
     steps:
       - run: echo "Checkout branch"
       - name: "checkout project code"
-        uses: actions/checkout@main
-      - name: "checkout additional code"
-        uses: actions/checkout@main
-        with:
-          repostiory:  bitnami-labs/readme-generator-for-helm
-          fetch-depth: 1
-      - run: npm install ./readme-generator-for-helm
-      - run: npx readme-generator-for-helm -v values.yaml -r README.md
+        uses: actions/checkout@v3
+      - name: "generate README.md" 
+        run: cd charts/charts/vaultwarden && npx readme-generator-for-helm -v values.yaml -r README.md
+      - name: "push changes"
+        run: |
+          cd charts/charts/vaultwarden
+          if git status -s | grep README.md; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+            git add README.md && git commit -s -m "docs: generate README.md file with 'readme-generator-for-helm'"
+          fi
+  produce-helm-chart:
+    name: "Produce Helm Chart"
+    runs-on: self-hosted
+    permissions:
+      contents: write
+    steps:
+      - run: echo "Checkout branch"
+      - name: "checkout project code"
+        uses: actions/checkout@v3
+      - name: "Helm package"
+        uses: helm/chart-releaser-action@v1.4.0
+        env:
+          CR_PACKAGE_PATH: "charts/charts/vaultwarden/"
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
