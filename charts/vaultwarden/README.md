@@ -102,6 +102,3 @@ $ helm install some-vaultwarden edudip/vaultwarden
 | `rocket.workers`                         | Set the number of rocket workers by hand                                                         | `""`    |
 | `writeAheadLoggingEnabled`               | Switches Write-Ahead Logging of SQLite database                                                  | `""`    |
 
-
-## Further Inforamtion
-...test
