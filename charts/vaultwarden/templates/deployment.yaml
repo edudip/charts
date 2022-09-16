@@ -40,7 +40,7 @@ spec:
           {{- end }}
           image: {{ include "vaultwarden.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
-          {{- if and .Values.persistence.enabled (eq "-" .Values.externalDatabase.type) }}
+          {{- if .Values.persistence.enabled }}
           volumeMounts:
             - name: data
               mountPath: {{ .Values.dataFolder | quote }}
@@ -106,7 +106,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if and .Values.persistence.enabled (eq "-" .Values.externalDatabase.type) }}
+      {{- if .Values.persistence.enabled }}
       volumes:
         - name: data
           persistentVolumeClaim:
