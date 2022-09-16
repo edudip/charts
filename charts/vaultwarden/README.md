@@ -4,14 +4,14 @@ A simple and lightweight Vaultwarden Helm Chart. [Vaultwarden](https://github.co
 ## TL;DR
 
 ```bash
-helm repo add foo https://foo.bar/charts
-helm repo up
-helm install foo/vaultwarden
+$ helm repo add edudip https://charts.edudip.dev/
+$ helm search repo edudip
+$ helm install some-vaultwarden edudip/vaultwarden
 ```
 
 ## Prerequisites
-- Kubernetes 1.20+
-- Helm xxx
+- Kubernetes 1.21+
+- Helm 3.9.4+
 
 ## Parameters
 
