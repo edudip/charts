@@ -10,7 +10,7 @@ on:
 jobs:
   publish-helm-chart:
     name: "Publish Helm Chart"
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
