@@ -5,17 +5,27 @@ on:
     branches:
       - main
 jobs:
-  run-npm-script:
-    name: "run-npm-script"
+  gen-readme-and-push-results:
+    name: "Generate README and push results"
     runs-on: self-hosted
     steps:
       - run: echo "Checkout branch"
-      - name: "checkout project code"
-        uses: actions/checkout@main
-      - name: "checkout additional code"
-        uses: actions/checkout@main
+      - name: "Checkout project code"
+        uses: actions/checkout@v3
         with:
-          repostiory:  bitnami-labs/readme-generator-for-helm
-          fetch-depth: 1
-      - run: npm install ./readme-generator-for-helm
-      - run: npx readme-generator-for-helm -v values.yaml -r README.md
+          ref: ${{ github.head_ref }}
+      - name: "Install Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: "Generate README.md" 
+        run: cd charts/vaultwarden && npx readme-generator-for-helm -v values.yaml -r README.md
+      - name: "Push changes"
+        run: |
+          cd charts/vaultwarden
+          if git status -s | grep README.md; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+            git add README.md && git commit -s -m "docs: generate README.md file with 'readme-generator-for-helm'"
+            git push
+          fi
