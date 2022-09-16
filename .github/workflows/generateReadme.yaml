@@ -10,11 +10,15 @@ jobs:
     runs-on: self-hosted
     steps:
       - run: echo "Checkout branch"
-      - name: "checkout project code"
+      - name: "Checkout project code"
         uses: actions/checkout@v3
-      - name: "generate README.md" 
+      - name: "Install Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: "Generate README.md" 
         run: cd charts/vaultwarden && npx readme-generator-for-helm -v values.yaml -r README.md
-      - name: "push changes"
+      - name: "Push changes"
         run: |
           cd charts/vaultwarden
           if git status -s | grep README.md; then
