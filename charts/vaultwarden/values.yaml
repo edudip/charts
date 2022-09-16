@@ -207,7 +207,7 @@ dataFolder: "/data"
 ## @param externalDatabase.password [string] Password of the database
 ## @param externalDatabase.urn [string] URN of the database server (can be IP or domain)
 ## @param externalDatabase.port [string] Port of the database server
-## @param externalDatabase.name [string] Name of the database
+## @param externalDatabase.database [string] Name of the database
 ## @param externalDatabase.overrideUrl [string] If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters
 ## @param externalDatabase.existingSecret.name [string] Name of the secret containing complete database URL
 ## Note: If set `externalDatabase.username` and `externalDatabase.password` will be ignored
@@ -223,7 +223,7 @@ externalDatabase:
   password: ""
   urn: ""
   port: ""
-  name: ""
+  database: ""
   overrideUrl: ""
   existingSecret:
     name: ""
