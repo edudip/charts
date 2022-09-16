@@ -7,7 +7,7 @@
 ## @param image.pullPolicy [string] Kubernetes pullPolicy: can 'IfNotPresent' or 'Always'
 ## Ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
 ## @param image.tag [string] Overrides the image tag whose default is the chart appVersion
-## @param image.digest [string] Sha256 value of the image. Note: if set "hash" will override the tag parameter
+## @param image.digest [string] Sha256 value of the image. Note: if set `digest` will override the tag parameter
 ## Note: To read more about the used Vaultwarden server image please read the documentation
 ## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Which-container-image-to-use
 ## 
