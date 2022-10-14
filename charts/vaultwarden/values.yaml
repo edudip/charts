@@ -137,7 +137,7 @@ affinity: {}
 ## @param ingress.annotations [object] Annotations to add to the ingress object
 ## @param ingress.hosts [array] Array of host objects
 ## @param ingress.tls [array] Array of TLS configurations
-## @param ingress.servicePort Port number of the service to reach HTTP endpoint defaults to prot 80
+## @param ingress.servicePort [nullable] Port number of the service to reach HTTP endpoint defaults to prot 80
 ##
 ingress:
   enabled: false
