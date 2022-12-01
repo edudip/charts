@@ -66,7 +66,7 @@ Vaultwarden needs a valid domain under wich this service is provided. The domain
 | `ingress.annotations`           | Annotations to add to the ingress object                              | `{}`    |
 | `ingress.hosts`                 | Array of host objects                                                 | `[]`    |
 | `ingress.tls`                   | Array of TLS configurations                                           | `[]`    |
-| `ingress.servicePort`           | Port number of the service to reach HTTP endpoint defaults to port 80 | `""`    |
+| `ingress.servicePort`           | Port number of the service to reach HTTP endpoint defaults is port 80 | `""`    |
 | `service.type`                  | Kubernetes service type                                               | `""`    |
 | `service.ports`                 | List of service ports                                                 | `[]`    |
 | `service.clusterIP`             | Service cluster IP                                                    | `""`    |
