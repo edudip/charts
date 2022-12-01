@@ -25,7 +25,7 @@ Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-MariaDB-%28MySQL%
 
 ## Domain
 
-Vaultwarden needs a valid domain under wich this service is provided. The domain must be set with `domain`.
+Vaultwarden needs a valid domain under which this service is provided. The domain must be set with `domain`.
 
 ## Parameters
 
