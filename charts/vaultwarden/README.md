@@ -13,6 +13,20 @@ $ helm install some-vaultwarden edudip/vaultwarden
 - Kubernetes 1.21+
 - Helm 3.9.4+
 
+## Database
+
+The value of `externalDatabase.type` swtiches between the different database configurations. If set to "-" (default) this chart will use 'SQLite3' database and needs a PersistentVolume or your data will be lost. 'MySQL' and 'Postgresql' can also be used as external database. Therfore the `externalDatabase.existingSecret.name` can be used, to provide a secret containing the full database URL string as the safest way. The secret should contain this database URL string with the key "url" or different values can be set with `externalDatabase.existingSecret.urlKey`. This string could also be provided in plain text in the values file as `externalDatabase.overrideUrl`, but keep in mind, this URL string contains the password and user to connect to the database.
+
+Note: For PSQL a full PSQL Databas URL is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
+Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend
+
+Note: For MariaDB a full MySQL Databas URL is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
+Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-MariaDB-%28MySQL%29-Backend
+
+## Domain
+
+Vaultwarden needs a valid domain under wich this service is provided. The domain must be set with `domain`.
+
 ## Parameters
 
 ### "Common Parameters"
