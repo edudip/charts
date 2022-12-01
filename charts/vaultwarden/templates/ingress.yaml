@@ -51,10 +51,10 @@ spec:
               service:
                 name: {{ $fullName }}
                 port:
-                  number: {{ default "80" .servicePort | quote }}
+                  number: {{ required "A valid 'servicePort' is required if Ingress is enabled!" .servicePort | quote }}
               {{- else }}
               serviceName: {{ $fullName }}
-              servicePort: {{ default "80" .servicePort | quote }}
+              servicePort: {{ required "A valid 'servicePort' is required if Ingress is enabled!" .servicePort | quote }}
               {{- end }}
           {{- end }}
     {{- end }}
