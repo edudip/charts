@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 19
       - name: "Generate README.md" 
-        run: cd charts/vaultwarden && npx readme-generator-for-helm -v values.yaml -r README.md
+        run: cd charts/vaultwarden && npx -ddd readme-generator-for-helm -v values.yaml -r README.md
       - name: "Push changes"
         run: |
           cd charts/vaultwarden
