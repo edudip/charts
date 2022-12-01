@@ -13,7 +13,7 @@ data:
   {{- end }}
   DATA_FOLDER: {{ default "/data" .Values.dataFolder | quote }}
   {{- if ne "-" .Values.externalDatabase.type }}
-  {{- if not (empty .Values.externalDatabase.existingSecret.name) }}
+  {{- if (empty .Values.externalDatabase.existingSecret.name) }}
   {{- if not (empty .Values.externalDatabase.overrideUrl) }}
   DATABASE_URL: {{ .Values.database.overrideUrl }}
   {{- else }}

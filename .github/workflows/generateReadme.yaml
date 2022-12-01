@@ -20,9 +20,9 @@ jobs:
       - name: "Install Node"
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: '16'
       - name: "Generate README.md" 
-        run: cd charts/vaultwarden && npx readme-generator-for-helm -v values.yaml -r README.md
+        run: cd charts/vaultwarden && npx @bitnami/readme-generator-for-helm -v values.yaml -r README.md
       - name: "Push changes"
         run: |
           cd charts/vaultwarden
