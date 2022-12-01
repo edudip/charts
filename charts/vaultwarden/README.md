@@ -45,19 +45,20 @@ $ helm install some-vaultwarden edudip/vaultwarden
 
 ### "Traffic related parameters"
 
-| Name                            | Description                                 | Value   |
-| ------------------------------- | ------------------------------------------- | ------- |
-| `ingress.enabled`               | turn on/off ingress of the chart at all     | `false` |
-| `ingress.className`             | Name of the Ingress Class                   | `""`    |
-| `ingress.annotations`           | Annotations to add to the ingress object    | `{}`    |
-| `ingress.hosts`                 | Array of host objects                       | `[]`    |
-| `ingress.tls`                   | Array of TLS configurations                 | `[]`    |
-| `service.type`                  | Kubernetes service type                     | `""`    |
-| `service.ports`                 | List of service ports                       | `[]`    |
-| `service.clusterIP`             | Service cluster IP                          | `""`    |
-| `service.externalTrafficPolicy` | Service external traffic policy             | `[]`    |
-| `service.sessionAffinity`       | Service session afffinity                   | `""`    |
-| `service.sessionAffinityConfig` | Additional settings for the sessionAffinity | `{}`    |
+| Name                            | Description                                                           | Value   |
+| ------------------------------- | --------------------------------------------------------------------- | ------- |
+| `ingress.enabled`               | turn on/off ingress of the chart at all                               | `false` |
+| `ingress.className`             | Name of the Ingress Class                                             | `""`    |
+| `ingress.annotations`           | Annotations to add to the ingress object                              | `{}`    |
+| `ingress.hosts`                 | Array of host objects                                                 | `[]`    |
+| `ingress.tls`                   | Array of TLS configurations                                           | `[]`    |
+| `ingress.servicePort`           | Port number of the service to reach HTTP endpoint defaults to prot 80 | `""`    |
+| `service.type`                  | Kubernetes service type                                               | `""`    |
+| `service.ports`                 | List of service ports                                                 | `[]`    |
+| `service.clusterIP`             | Service cluster IP                                                    | `""`    |
+| `service.externalTrafficPolicy` | Service external traffic policy                                       | `[]`    |
+| `service.sessionAffinity`       | Service session afffinity                                             | `""`    |
+| `service.sessionAffinityConfig` | Additional settings for the sessionAffinity                           | `{}`    |
 
 
 ### "Vaultwarden Related Parameters"
