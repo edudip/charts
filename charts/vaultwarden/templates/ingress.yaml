@@ -1,5 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "vaultwarden.fullname" . -}}
+{{- $svcPort := .Values.ingress.servicePort -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -51,10 +52,10 @@ spec:
               service:
                 name: {{ $fullName }}
                 port:
-                  number: {{ required "A valid 'servicePort' is required if Ingress is enabled!" .servicePort | quote }}
+                  number: {{ $svcPort }}
               {{- else }}
               serviceName: {{ $fullName }}
-              servicePort: {{ required "A valid 'servicePort' is required if Ingress is enabled!" .servicePort | quote }}
+              servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
     {{- end }}
