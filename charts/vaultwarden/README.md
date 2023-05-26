@@ -56,7 +56,6 @@ Vaultwarden needs a valid domain under which this service is provided. The domai
 | `persistence.storageClassName`                  |                                                                                  | `""`    |
 | `persistence.volumeName`                        | If `persistence.storageClassName` is set to "-"                                  | `""`    |
 
-
 ### "Traffic related parameters"
 
 | Name                            | Description                                                           | Value   |
@@ -73,7 +72,6 @@ Vaultwarden needs a valid domain under which this service is provided. The domai
 | `service.externalTrafficPolicy` | Service external traffic policy                                       | `[]`    |
 | `service.sessionAffinity`       | Service session afffinity                                             | `""`    |
 | `service.sessionAffinityConfig` | Additional settings for the sessionAffinity                           | `{}`    |
-
 
 ### "Vaultwarden Related Parameters"
 
