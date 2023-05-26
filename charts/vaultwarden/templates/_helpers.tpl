@@ -84,12 +84,3 @@ Generate the database URL from value file
 {{/*
 Generate proper image repository name
 */}}
-{{- define "vaultwarden.image" -}}
-{{- if not (empty .Values.image.digest) }}
-{{- $url := print .Values.image.repository "@" .Values.image.digest }}
-{{- printf "%s" $url }}
-{{- else }}
-{{- $url := print .Values.image.repository ":" .Values.image.tag }}
-{{- printf "%s" $url }}
-{{- end }}
-{{- end -}}
