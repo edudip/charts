@@ -7,15 +7,14 @@
 ## @param image.pullPolicy [string] Kubernetes pullPolicy: can 'IfNotPresent' or 'Always'
 ## Ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
 ## @param image.tag [string] Overrides the image tag whose default is the chart appVersion
-## @param image.digest [string] Sha256 value of the image. Note: if set "hash" will override the tag parameter
-## Note: To read more about the used Vaultwarden server image please read the documentation
+## @param image.digest [string] Sha256 value of the image. Note: if set `digest` will override the tag parameter
+## Note: To get more information about the used Vaultwarden server image please read the documentation
 ## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Which-container-image-to-use
 ## 
 image:
   repository: vaultwarden/server
   pullPolicy: IfNotPresent
-  tag: "1.25.2"
-  digest: "sha256:b53ade4460c14f7b5c94a22c2520b2a1414c770290a5aadc707973a27617ca26"
+  tag: "1.28.1"
 
 ## @param podSecurityContext.enabled Switches `securityContext` for the POD
 ##
@@ -137,6 +136,7 @@ affinity: {}
 ## @param ingress.annotations [object] Annotations to add to the ingress object
 ## @param ingress.hosts [array] Array of host objects
 ## @param ingress.tls [array] Array of TLS configurations
+## @param ingress.servicePort [string] Port number of the service to reach HTTP endpoint defaults is port 80
 ##
 ingress:
   enabled: false
@@ -155,6 +155,7 @@ ingress:
   ##    hosts:
   ##      - chart-example.local
   ##
+  servicePort: "80"
 
 service:
   ## @param service.type [string] Kubernetes service type
@@ -205,25 +206,25 @@ dataFolder: "/data"
 ## Note: If set to "-" it will disable generation of external databas link
 ## @param externalDatabase.username [string] Username of the database user
 ## @param externalDatabase.password [string] Password of the database
-## @param externalDatabase.urn [string] URN of the database server (can be IP or domain)
+## @param externalDatabase.host [string] URN of the database server (can be IP or domain)
 ## @param externalDatabase.port [string] Port of the database server
-## @param externalDatabase.name [string] Name of the database
+## @param externalDatabase.database [string] Name of the database
 ## @param externalDatabase.overrideUrl [string] If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters
 ## @param externalDatabase.existingSecret.name [string] Name of the secret containing complete database URL
 ## Note: If set `externalDatabase.username` and `externalDatabase.password` will be ignored
 ## @param externalDatabase.existingSecret.urlKey [string] Key of the databas URL (if let empfty "url" will be used) 
 ## Note: For PSQL a full PSQL Databas URL is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
-## Note: Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend
 ## Note: For MariaDB a full MySQL Databas URL is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
-## Note: Ref: https://github.com/dani-garcia/vaultwarden/wiki/Migrating-from-MariaDB-%28MySQL%29-to-SQLite
+## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-MariaDB-%28MySQL%29-Backend
 ##
 externalDatabase:
   type: "-"
   username: "vaultwarden"
   password: ""
-  urn: ""
+  host: ""
   port: ""
-  name: ""
+  database: ""
   overrideUrl: ""
   existingSecret:
     name: ""

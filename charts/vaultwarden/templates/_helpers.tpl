@@ -77,19 +77,10 @@ Generate the database port from value file
 Generate the database URL from value file
 */}}
 {{- define "dbUrl" -}}
-{{- $var := print .Values.externalDatabase.type "://" .Values.externalDatabase.username ":" .Values.externalDatabase.password "@" .Values.externalDatabase.urn (include "dbPort" . ) "/" .Values.externalDatabase.name }}
+{{- $var := print .Values.externalDatabase.type "://" .Values.externalDatabase.username ":" .Values.externalDatabase.password "@" .Values.externalDatabase.urn (include "dbPort" . ) "/" .Values.externalDatabase.database }}
 {{- printf "%s" $var }}
 {{- end -}}
 
 {{/*
 Generate proper image repository name
 */}}
-{{- define "vaultwarden.image" -}}
-{{- if not (empty .Values.image.digest) }}
-{{- $url := print .Values.image.repository "@" .Values.image.digest }}
-{{- printf "%s" $url }}
-{{- else }}
-{{- $url := print .Values.image.repository ":" .Values.image.tag }}
-{{- printf "%s" $url }}
-{{- end }}
-{{- end -}}

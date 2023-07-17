@@ -4,5 +4,6 @@ description: A simple and lightweight Vaultwarden chart
 type: application
 icon: https://github.com/dani-garcia/vaultwarden/blob/main/src/static/images/vaultwarden-icon.png?raw=true
 
-version: 0.0.8
+version: 0.3.1
+
 appVersion: "1.25.2"

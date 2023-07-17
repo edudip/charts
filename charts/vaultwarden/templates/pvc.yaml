@@ -1,4 +1,4 @@
-{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim ) (eq "-" .Values.externalDatabase.type ) -}}
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim ) -}}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -17,6 +17,6 @@ spec:
     requests:
       storage: {{ .Values.persistence.size | quote }}
   {{- if not (empty .Values.persistence.storageClassName) }}
-  storageclassName: {{ .Values.persistence.storageClassName | quote }}
+  storageClassName: {{ .Values.persistence.storageClassName | quote }}
   {{- end }}
 {{- end -}}

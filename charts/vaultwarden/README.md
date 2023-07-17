@@ -13,52 +13,65 @@ $ helm install some-vaultwarden edudip/vaultwarden
 - Kubernetes 1.21+
 - Helm 3.9.4+
 
+## Database
+
+The value of `externalDatabase.type` switches between the different database configurations. If set to "-" (default) this chart will use 'SQLite3' database and needs a PersistentVolume or your data will be lost. 'MySQL' and 'PostgreSQL' can also be used as external database. Therfore the `externalDatabase.existingSecret.name` can be used, to provide a secret containing the full database URL string as the safest way. The secret should contain this database URL string with the key "url" or different values can be set with `externalDatabase.existingSecret.urlKey`. This string could also be provided in plain text in the values file as `externalDatabase.overrideUrl`, but keep in mind, this URL string contains the password and user to connect to the database.
+
+Note: For PSQL a full PSQL Databas URL is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
+Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend
+
+Note: For MariaDB a full MySQL Databas URL is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
+Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-MariaDB-%28MySQL%29-Backend
+
+## Domain
+
+Vaultwarden needs a valid domain under which this service is provided. The domain must be set with `domain`.
+
 ## Parameters
 
 ### "Common Parameters"
 
-| Name                                            | Description                                                                    | Value   |
-| ----------------------------------------------- | ------------------------------------------------------------------------------ | ------- |
-| `image.repository`                              | Repository URI or name                                                         | `""`    |
-| `image.pullPolicy`                              | Kubernetes pullPolicy: can 'IfNotPresent' or 'Always'                          | `""`    |
-| `image.tag`                                     | Overrides the image tag whose default is the chart appVersion                  | `""`    |
-| `image.digest`                                  | Sha256 value of the image. Note: if set "hash" will override the tag parameter | `""`    |
-| `podSecurityContext.enabled`                    | Switches `securityContext` for the POD                                         | `false` |
-| `containerSecurityContext.enabled`              | Switch `securityContext` for the container                                     | `false` |
-| `resources`                                     | Defaults for the resources used by the application                             | `{}`    |
-| `autoscaling.enabled`                           | Enable horizontal POD autoscaling                                              | `false` |
-| `autoscaling.minReplicas`                       | Minimum number of replicas                                                     | `1`     |
-| `autoscaling.maxReplicas`                       | Maximum number of replicas                                                     | `100`   |
-| `autoscaling.targetCPUUtilizationPercentage`    | Target CPU utilization percentage                                              | `80`    |
-| `autoscaling.targetMemoryUtilizationPercentage` | Target Memory utilization percentage                                           | `""`    |
-| `replicaCount`                                  | Number of replicas to deploy                                                   | `1`     |
-| `serviceAccount.create`                         | Specifies whether a service account should be created                          | `true`  |
-| `serviceAccount.annotations`                    | Annotations to add to the service account                                      | `{}`    |
-| `serviceAccount.name`                           | The name of the service account to use                                         | `""`    |
-| `persistence.enabled`                           | Switches the persistance feature                                               | `""`    |
-| `persistence.existingClaim`                     | Name of an existing claim                                                      | `""`    |
-| `persistence.accessModes`                       | Array of accessModes                                                           | `[]`    |
-| `persistence.size`                              |                                                                                | `""`    |
-| `persistence.storageClassName`                  |                                                                                | `""`    |
-| `persistence.volumeName`                        | If `persistence.storageClassName` is set to "-"                                | `""`    |
-
+| Name                                            | Description                                                                      | Value   |
+| ----------------------------------------------- | -------------------------------------------------------------------------------- | ------- |
+| `image.repository`                              | Repository URI or name                                                           | `""`    |
+| `image.pullPolicy`                              | Kubernetes pullPolicy: can 'IfNotPresent' or 'Always'                            | `""`    |
+| `image.tag`                                     | Overrides the image tag whose default is the chart appVersion                    | `""`    |
+| `image.digest`                                  | Sha256 value of the image. Note: if set `digest` will override the tag parameter | `""`    |
+| `podSecurityContext.enabled`                    | Switches `securityContext` for the POD                                           | `false` |
+| `containerSecurityContext.enabled`              | Switch `securityContext` for the container                                       | `false` |
+| `resources`                                     | Defaults for the resources used by the application                               | `{}`    |
+| `autoscaling.enabled`                           | Enable horizontal POD autoscaling                                                | `false` |
+| `autoscaling.minReplicas`                       | Minimum number of replicas                                                       | `1`     |
+| `autoscaling.maxReplicas`                       | Maximum number of replicas                                                       | `100`   |
+| `autoscaling.targetCPUUtilizationPercentage`    | Target CPU utilization percentage                                                | `80`    |
+| `autoscaling.targetMemoryUtilizationPercentage` | Target Memory utilization percentage                                             | `""`    |
+| `replicaCount`                                  | Number of replicas to deploy                                                     | `1`     |
+| `serviceAccount.create`                         | Specifies whether a service account should be created                            | `true`  |
+| `serviceAccount.annotations`                    | Annotations to add to the service account                                        | `{}`    |
+| `serviceAccount.name`                           | The name of the service account to use                                           | `""`    |
+| `persistence.enabled`                           | Switches the persistance feature                                                 | `""`    |
+| `persistence.existingClaim`                     | Name of an existing claim                                                        | `""`    |
+| `persistence.accessModes`                       | Array of accessModes                                                             | `[]`    |
+| `persistence.size`                              |                                                                                  | `""`    |
+| `persistence.storageClassName`                  |                                                                                  | `""`    |
+| `persistence.volumeName`                        | If `persistence.storageClassName` is set to "-"                                  | `""`    |
 
 ### "Traffic related parameters"
 
-| Name                            | Description                                 | Value   |
-| ------------------------------- | ------------------------------------------- | ------- |
-| `ingress.enabled`               | turn on/off ingress of the chart at all     | `false` |
-| `ingress.className`             | Name of the Ingress Class                   | `""`    |
-| `ingress.annotations`           | Annotations to add to the ingress object    | `{}`    |
-| `ingress.hosts`                 | Array of host objects                       | `[]`    |
-| `ingress.tls`                   | Array of TLS configurations                 | `[]`    |
-| `service.type`                  | Kubernetes service type                     | `""`    |
-| `service.ports`                 | List of service ports                       | `[]`    |
-| `service.clusterIP`             | Service cluster IP                          | `""`    |
-| `service.externalTrafficPolicy` | Service external traffic policy             | `[]`    |
-| `service.sessionAffinity`       | Service session afffinity                   | `""`    |
-| `service.sessionAffinityConfig` | Additional settings for the sessionAffinity | `{}`    |
-
+| Name                            | Description                                                           | Value   |
+| ------------------------------- | --------------------------------------------------------------------- | ------- |
+| `ingress.enabled`               | turn on/off ingress of the chart at all                               | `false` |
+| `ingress.className`             | Name of the Ingress Class                                             | `""`    |
+| `ingress.annotations`           | Annotations to add to the ingress object                              | `{}`    |
+| `ingress.hosts`                 | Array of host objects                                                 | `[]`    |
+| `ingress.tls`                   | Array of TLS configurations                                           | `[]`    |
+| `ingress.servicePort`           | Port number of the service to reach HTTP endpoint defaults is port 80 | `""`    |
+| `service.type`                  | Kubernetes service type                                               | `""`    |
+| `service.ports`                 | List of service ports                                                 | `[]`    |
+| `service.clusterIP`             | Service cluster IP                                                    | `""`    |
+| `service.externalTrafficPolicy` | Service external traffic policy                                       | `[]`    |
+| `service.sessionAffinity`       | Service session afffinity                                             | `""`    |
+| `service.sessionAffinityConfig` | Additional settings for the sessionAffinity                           | `{}`    |
 
 ### "Vaultwarden Related Parameters"
 
@@ -69,9 +82,9 @@ $ helm install some-vaultwarden edudip/vaultwarden
 | `externalDatabase.type`                  | Type of the databas (protocol)                                                                   | `""`    |
 | `externalDatabase.username`              | Username of the database user                                                                    | `""`    |
 | `externalDatabase.password`              | Password of the database                                                                         | `""`    |
-| `externalDatabase.urn`                   | URN of the database server (can be IP or domain)                                                 | `""`    |
+| `externalDatabase.host`                  | URN of the database server (can be IP or domain)                                                 | `""`    |
 | `externalDatabase.port`                  | Port of the database server                                                                      | `""`    |
-| `externalDatabase.name`                  | Name of the database                                                                             | `""`    |
+| `externalDatabase.database`              | Name of the database                                                                             | `""`    |
 | `externalDatabase.overrideUrl`           | If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters | `""`    |
 | `externalDatabase.existingSecret.name`   | Name of the secret containing complete database URL                                              | `""`    |
 | `externalDatabase.existingSecret.urlKey` | Key of the databas URL (if let empfty "url" will be used)                                        | `""`    |
@@ -101,4 +114,5 @@ $ helm install some-vaultwarden edudip/vaultwarden
 | `rocket.limits`                          | By default the API calls are limited to 10MB                                                     | `""`    |
 | `rocket.workers`                         | Set the number of rocket workers by hand                                                         | `""`    |
 | `writeAheadLoggingEnabled`               | Switches Write-Ahead Logging of SQLite database                                                  | `""`    |
+
 
