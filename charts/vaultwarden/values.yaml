@@ -10,11 +10,11 @@
 ## @param image.digest [string] Sha256 value of the image. Note: if set `digest` will override the tag parameter
 ## Note: To get more information about the used Vaultwarden server image please read the documentation
 ## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Which-container-image-to-use
-## 
+##
 image:
   repository: vaultwarden/server
   pullPolicy: IfNotPresent
-  tag: "1.28.1"
+  tag: "1.29.2"
 
 ## @param podSecurityContext.enabled Switches `securityContext` for the POD
 ##
