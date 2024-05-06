@@ -14,7 +14,7 @@
 image:
   repository: vaultwarden/server
   pullPolicy: IfNotPresent
-  tag: "1.29.2"
+  tag: "1.30.5"
 
 ## @param podSecurityContext.enabled Switches `securityContext` for the POD
 ##
@@ -185,6 +185,13 @@ service:
 
 ## @section "Vaultwarden Related Parameters"
 ##
+
+## @param logLevel [string, default: info] Verbosity level of the log output
+## Note: Change the verbosity of the log output
+## Valid values are "trace", "debug", "info", "warn", "error", and "off"
+## Setting it to "trace" or "debug" will also show logs for mounted routes, static files, websocket, and alive requests
+##
+logLevel: info
 
 ## @param domain [string] URL to access Vaultwarden instance
 ## Warning: A valid URL is required to start Vaultwarden

@@ -77,6 +77,7 @@ Vaultwarden needs a valid domain under which this service is provided. The domai
 
 | Name                                     | Description                                                                                      | Value   |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------ | ------- |
+| `logLevel`                               | Verbosity level of the log output                                                                | `info`  |
 | `domain`                                 | URL to access Vaultwarden instance                                                               | `""`    |
 | `dataFolder`                             | Prefix to override the location where data is saved.                                             | `/data` |
 | `externalDatabase.type`                  | Type of the databas (protocol)                                                                   | `""`    |
