@@ -186,7 +186,7 @@ service:
 ## @section "Vaultwarden Related Parameters"
 ##
 
-## @param logLevel [string] Verbosity level of the log output
+## @param logLevel [string, default: info] Verbosity level of the log output
 ## Note: Change the verbosity of the log output
 ## Valid values are "trace", "debug", "info", "warn", "error", and "off"
 ## Setting it to "trace" or "debug" will also show logs for mounted routes, static files, websocket, and alive requests
