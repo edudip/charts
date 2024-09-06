@@ -14,7 +14,7 @@
 image:
   repository: vaultwarden/server
   pullPolicy: IfNotPresent
-  tag: "1.30.5"
+  tag: "1.32.0"
 
 ## @param podSecurityContext.enabled Switches `securityContext` for the POD
 ##
