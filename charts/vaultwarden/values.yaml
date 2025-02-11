@@ -304,6 +304,9 @@ showPasswordHint: false
 ##
 adminToken: ""
 
+# Enable experimentalfeatures like ssh
+#experimentalFeatures: "ssh-key-vault-item,ssh-agent"
+
 ## @param adminTokenSecret.name [string] Name of the secret containing the `ADMIN_TOKEN`
 ## @param adminTokenSecret.tokenKey [string] Key of the token (if let empty "token" will be used)
 ## Note: Read notes about `adminToken` for more inforamtion about this parameter
