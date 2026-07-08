@@ -6,6 +6,9 @@ metadata:
   labels:
     {{- include "vaultwarden.labels" . | nindent 4 }}
 data:
+  {{- if .Values.experimentalFeatures }}
+  EXPERIMENTAL_CLIENT_FEATURE_FLAGS: {{ .Values.experimentalFeatures }}
+  {{- end }}
   LOG_LEVEL: {{ .Values.logLevel | quote }}
   {{- if .Values.adminToken }}
   {{- if not .Values.adminTokenSecret }}
