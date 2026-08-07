@@ -14,7 +14,7 @@
 image:
   repository: vaultwarden/server
   pullPolicy: IfNotPresent
-  tag: "1.36.0"
+  tag: "1.37.1"
 
 ## @param podSecurityContext.enabled Switches `securityContext` for the POD
 ##
@@ -55,7 +55,7 @@ resources: {}
 ##    memory: 128Mi
 
 ## Kubernetes autoscaling
-## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ 
+## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 ## @param autoscaling.enabled Enable horizontal POD autoscaling
 ## @param autoscaling.minReplicas Minimum number of replicas
 ## @param autoscaling.maxReplicas Maximum number of replicas
@@ -90,7 +90,7 @@ serviceAccount:
 ## @param persistence.accessModes [array] Array of accessModes
 ## @param persistence.size [string]
 ## @param persistence.storageClassName [string]
-## @param persistence.volumeName [string] If `persistence.storageClassName` is set to "-" 
+## @param persistence.volumeName [string] If `persistence.storageClassName` is set to "-"
 ##
 persistence:
   enabled: true
@@ -177,7 +177,7 @@ service:
       port: 80
   clusterIP: ""
   externalTrafficPolicy: []
-  sessionAffinity: None 
+  sessionAffinity: None
   sessionAffinityConfig: {}
   ##  clientIP:
   ##    timeoutSeconds: 300
@@ -202,7 +202,7 @@ logLevel: info
 ##
 domain: "https://vaultwarden.example.com"
 
-## @param dataFolder Prefix to override the location where data is saved. 
+## @param dataFolder Prefix to override the location where data is saved.
 ## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Changing-persistent-data-location
 ##
 dataFolder: "/data"
@@ -219,7 +219,7 @@ dataFolder: "/data"
 ## @param externalDatabase.overrideUrl [string] If `externalDatabase.type` is not "-", overrides whole database URL and ignores other parameters
 ## @param externalDatabase.existingSecret.name [string] Name of the secret containing complete database URL
 ## Note: If set `externalDatabase.username` and `externalDatabase.password` will be ignored
-## @param externalDatabase.existingSecret.urlKey [string] Key of the databas URL (if let empfty "url" will be used) 
+## @param externalDatabase.existingSecret.urlKey [string] Key of the databas URL (if let empfty "url" will be used)
 ## Note: For PSQL a full PSQL Databas URL is expexted like this: "postgresql://[[user]:[password]@]host[:port][/database]"
 ## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Using-the-PostgreSQL-Backend
 ## Note: For MariaDB a full MySQL Databas URL is expexted like this: "mysql://[[user]:[password]@]host[:port][/database]"
@@ -237,7 +237,6 @@ externalDatabase:
     name: ""
     urlKey: ""
 
-
 ## @param smtp.urn [string] URN of the SMTP server (can be IP or domain)
 ## Ref: https://github.com/dani-garcia/vaultwarden/wiki/SMTP-Configuration#smtp-servers
 ## @param smtp.security [string] Security option of the SMTP server (can be "starttls", "force_tls", "off")
@@ -248,7 +247,7 @@ externalDatabase:
 ## @param smtp.username [string] Username of SMTP server (leave empty if not needed)
 ## @param smtp.password [string] Password of SMTP server (leave empty if not needed)
 ## @param smtp.from [string] Email address of the sender (should not be empty or invalid)
-## @param smtp.existingSecret.name [string] 
+## @param smtp.existingSecret.name [string]
 ## Note: If set `smtp.username` and `smtp.password` will be ignored
 ## @param smtp.existingSecret.usernameKey [string] Key of the SMTP username (if let empty "username" will be used)
 ## @param smtp.existingSecret.passwordKey [string] Key of the SMTP password (if let empty "password" will be used)
@@ -264,7 +263,6 @@ smtp:
     name: ""
     usernameKey: ""
     passwordKey: ""
-
 
 ## @param signups.allowed [string] If true anyone can access the instance of Vaultwarden
 ## Note: Even if set to 'false' an existing user who is an organization owner or admin can still invite new users
@@ -344,9 +342,9 @@ yubikey:
 ## Ref: https://github.com/dani-garcia/vaultwarden/wiki/Changing-the-number-of-workers
 ##
 rocket:
-   tls: ""
-   limits: ""
-   workers: ""
+  tls: ""
+  limits: ""
+  workers: ""
 
 ## @param writeAheadLoggingEnabled [string] Switches Write-Ahead Logging of SQLite database
 ## Warning: Do not change this, unless you're absolutely sure that you need to turn WAL off
